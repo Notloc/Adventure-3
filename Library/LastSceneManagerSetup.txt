@@ -1,8 +1,0 @@
-sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/Player Scene.unity
-=======
-- path: Assets/Scenes/Enemy Testing Realm.unity
->>>>>>> origin/create-enemy
-  isLoaded: 1
-  isActive: 1
