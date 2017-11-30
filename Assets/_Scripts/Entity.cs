@@ -5,8 +5,8 @@ public class Entity : MonoBehaviour, iDamagable
 {
     public float health;
 
-    public void Damage(float amount)
+    public virtual void Damage(float amount)
     {
-
+        health -= amount;
     }
 }
