@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adventure³", "Adventure³.csproj", "{8A611122-90AF-496C-6AC7-512E4222413A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adventure³.Editor", "Adventure³.Editor.csproj", "{1CDE90AB-0AE4-F65A-0C88-AF7ADACE8C34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A611122-90AF-496C-6AC7-512E4222413A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A611122-90AF-496C-6AC7-512E4222413A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A611122-90AF-496C-6AC7-512E4222413A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A611122-90AF-496C-6AC7-512E4222413A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CDE90AB-0AE4-F65A-0C88-AF7ADACE8C34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CDE90AB-0AE4-F65A-0C88-AF7ADACE8C34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CDE90AB-0AE4-F65A-0C88-AF7ADACE8C34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CDE90AB-0AE4-F65A-0C88-AF7ADACE8C34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
