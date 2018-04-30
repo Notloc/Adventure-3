@@ -10,7 +10,7 @@ public class NavGrid : MonoBehaviour
     [SerializeField] int width;
     [SerializeField] int height;
 
-    [SerializeField] Vector3 navGridPosition;
+    [SerializeField] Vector3 positionOffset;
 
     public void GenerateNodes()
     {
@@ -25,7 +25,7 @@ public class NavGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-
+        return;
         if (width <= 0 || height <= 0)
         {
             return;
@@ -37,7 +37,7 @@ public class NavGrid : MonoBehaviour
 
         Gizmos.color = new Color(1, 0, 0.2f, 0.65F);
 
-        Vector3 topLeft = this.transform.position + navGridPosition;
+        Vector3 topLeft = this.transform.position + positionOffset;
 
         for (int y = 0; y < height; y++)
         {
