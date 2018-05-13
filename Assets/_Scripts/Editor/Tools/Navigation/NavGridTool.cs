@@ -92,28 +92,31 @@ public class NavGridTool : Editor
         Handles.EndGUI();
     }
 
-    public static void HandleNodeClick(NavGrid navGrid, int x, int y)
+    public static void HandleNodeClick(NavGrid navGrid, Vector2i nodeCoordinates)
     {
+        //SELECT
         if (selectedTool == 0)
         {
-            return;
+            selectedNode = nodeCoordinates;
         }
 
+        //SINGLE
         if (selectedTool == 1)
         {
-            navGrid.ToggleNodes(new Vector2i(x,y), new Vector2i(x,y));
+            navGrid.ToggleNodes(nodeCoordinates, nodeCoordinates);
         }
 
+        //SQUARE
         if(selectedTool == 2)
         {
             if (selectedNode.Equals(NO_NODE))
             {
-                selectedNode = new Vector2i(x,y);
+                selectedNode = nodeCoordinates;
             }
             else
             {
                 //Toggle entire squares of walkable area
-                navGrid.ToggleNodes(selectedNode, new Vector2i(x, y));
+                navGrid.ToggleNodes(selectedNode, nodeCoordinates);
                 selectedNode = NO_NODE;
             }
         }
@@ -124,6 +127,7 @@ public class NavGridTool : Editor
         }
     }
 
+    //Returns what color the given node should be
     public static Color ChooseNodeColor(Vector2i nodeCoordinate)
     {
         if (nodeCoordinate.Equals(selectedNode))

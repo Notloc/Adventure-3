@@ -111,10 +111,10 @@ public static class SubGridTool
 
     private static void HandleNodeClick(SubGrid subGrid, int xPos, int yPos)
     {
-        int x = Mathf.RoundToInt(subGrid.GetPosition().x) + xPos;
-        int y = Mathf.RoundToInt(subGrid.GetPosition().y) + yPos;
+        Vector2i nodeCoordinates = new Vector2i(Mathf.RoundToInt(subGrid.GetPosition().x + xPos),
+                                                    Mathf.RoundToInt(subGrid.GetPosition().y + yPos));
 
-        NavGridTool.HandleNodeClick(subGrid.GetNavGrid(), x, y);
+        NavGridTool.HandleNodeClick(subGrid.GetNavGrid(), nodeCoordinates);
 
         //Debug.Log("Node " + (Mathf.RoundToInt(subGrid.GetPosition().x) + xPos) + ", " + (Mathf.RoundToInt(subGrid.GetPosition().y) + yPos) + " Clicked.");
     }
