@@ -6,16 +6,14 @@ using UnityEditor;
 // Tool that handles creation and display of SubGrids
 public static class SubGridTool
 {
-    static int MAX_HANDLES_PER_FRAME = 500;
-    static int MIN_SECTION_SIZE = 20;
+    static int MAX_HANDLES_PER_FRAME = 400;
+    static int MIN_SECTION_SIZE = 15;
 
     static Color SUBGRID_COLOR = new Color(0f, 0.3f, 1.0f, 0.3f);
-    static Color PATHABLE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
-    static Color UNPATHABLE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
 
-    /* SUB GRID DISPLAY CODE
-     *      Code that handles displaying the selected SubGrid
-     */
+/* SUB GRID DISPLAY CODE
+*      Code that handles displaying the selected SubGrid
+*/
 
     //Draws the given SubGrid and its contents
     public static SubGrid DrawSubGrid(SubGrid selectedSubGrid)
@@ -38,7 +36,6 @@ public static class SubGridTool
 
         return selectedSubGrid;
     }
-
 
     private static bool DrawSubGridHandle(SubGrid subGrid, SubGrid activeSubGrid)
     {
@@ -76,7 +73,6 @@ public static class SubGridTool
         return false;
     }
 
-
     private static void DrawNodeHandles(SubGrid subGrid)
     {
         float buttonSize = 0.45f;
@@ -100,18 +96,9 @@ public static class SubGridTool
                 Vector2i nodeCoordinate = new Vector2i(
                                             Mathf.RoundToInt(subGrid.GetPosition().x + x),
                                             Mathf.RoundToInt(subGrid.GetPosition().y + y)
-                                            );
+                                        );
 
-                //Node color is based on if the node is pathable
-                if (navGrid.IsPathable(nodeCoordinate))
-                {
-                    Handles.color = PATHABLE_COLOR;
-                }
-                else
-                {
-                    Handles.color = UNPATHABLE_COLOR;
-                }
-
+                Handles.color = NavGridTool.ChooseNodeColor(nodeCoordinate);
                 
                 if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), buttonSize, buttonSize, Handles.SphereHandleCap))
                 {
@@ -133,8 +120,6 @@ public static class SubGridTool
     }
 
 
-
- 
 
 
 /* SUB GRID CREATION CODE

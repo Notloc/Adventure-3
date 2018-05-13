@@ -76,10 +76,25 @@ public class NavGrid : MonoBehaviour
         int startingNodeIndex = (startingNode.y * width) + startingNode.x;
         bool previousState = nodes[startingNodeIndex].IsPathable();
 
+        //Toggle Single Node
         if (startingNode.Equals(endingNode))
         {
-            Debug.Log(startingNode);
             nodes[startingNodeIndex].SetPathable(!previousState);
+        }
+
+        //Toggle Square of Nodes
+        else
+        {
+            Vector2i bottomLeft = new Vector2i(Mathf.Min(startingNode.x, endingNode.x), Mathf.Min(startingNode.y, endingNode.y));
+            Vector2i topRight = new Vector2i(Mathf.Max(startingNode.x, endingNode.x), Mathf.Max(startingNode.y, endingNode.y));
+
+            for(int y = bottomLeft.y; y <= topRight.y; y++)
+            {
+                for (int x = bottomLeft.x; x <= topRight.x; x++)
+                {
+                    nodes[(y * width) + x].SetPathable(!previousState);
+                }
+            }
         }
     }
 }

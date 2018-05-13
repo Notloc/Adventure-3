@@ -8,11 +8,18 @@ using UnityEditor;
 [InitializeOnLoad]
 public class NavGridTool : Editor
 {
+    static Vector2i NO_NODE = new Vector2i(-1, -1);
+
+    static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
+    static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
+    static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.35f);
+
     static NavGrid currentNavGrid;
     static SubGrid selectedSubGrid;
 
     static int selectedTool = 0;
 
+    static Vector2i selectedNode = NO_NODE;
 
     //Life Cycle Code
     static NavGridTool()
@@ -66,12 +73,19 @@ public class NavGridTool : Editor
             {
                 string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
 
-                selectedTool = GUILayout.SelectionGrid(
+                int newTool = GUILayout.SelectionGrid(
                     selectedTool,
                     toolLabels,
                     4,
                     EditorStyles.toolbarButton,
                     GUILayout.Width(300));
+
+                if(newTool != selectedTool)
+                {
+                    selectedTool = newTool;
+                    selectedNode = NO_NODE;
+                }
+
             }
             GUILayout.EndArea();
         }
@@ -92,13 +106,39 @@ public class NavGridTool : Editor
 
         if(selectedTool == 2)
         {
-            //Toggle entire squares of walkable area
-
+            if (selectedNode.Equals(NO_NODE))
+            {
+                selectedNode = new Vector2i(x,y);
+            }
+            else
+            {
+                //Toggle entire squares of walkable area
+                navGrid.ToggleNodes(selectedNode, new Vector2i(x, y));
+                selectedNode = NO_NODE;
+            }
         }
 
         if(selectedTool == 3)
         {
             //Toggle sides of squares for walkable area
+        }
+    }
+
+    public static Color ChooseNodeColor(Vector2i nodeCoordinate)
+    {
+        if (nodeCoordinate.Equals(selectedNode))
+        {
+            return SELECTED_NODE_COLOR;
+        }
+
+        //Node color is based on if the node is pathable
+        if (currentNavGrid.IsPathable(nodeCoordinate))
+        {
+            return PATHABLE_NODE_COLOR;
+        }
+        else
+        {
+            return UNPATHABLE_NODE_COLOR;
         }
     }
 
