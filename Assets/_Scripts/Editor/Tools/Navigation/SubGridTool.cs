@@ -6,10 +6,12 @@ using UnityEditor;
 // Tool that handles creation and display of SubGrids
 public static class SubGridTool
 {
-    static int MAX_HANDLES_PER_FRAME = 400;
-    static int MIN_SECTION_SIZE = 15;
+// CONSTANTS
+    readonly static int MAX_HANDLES_PER_FRAME = 400;
+    readonly static int MIN_SECTION_SIZE = 15;
+    readonly static Color SUBGRID_COLOR = new Color(0f, 0.3f, 1.0f, 0.3f);
+// END CONSTANTS
 
-    static Color SUBGRID_COLOR = new Color(0f, 0.3f, 1.0f, 0.3f);
 
 /* SUB GRID DISPLAY CODE
 *      Code that handles displaying the selected SubGrid
@@ -75,7 +77,7 @@ public static class SubGridTool
 
     private static void DrawNodeHandles(SubGrid subGrid)
     {
-        float buttonSize = 0.45f;
+        float NODE_SIZE = 0.45f;
 
         NavGrid navGrid = subGrid.GetNavGrid();
 
@@ -85,25 +87,22 @@ public static class SubGridTool
         int width = subGrid.GetWidth();
         int height = subGrid.GetHeight();
 
-
         //Draw each node
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
+                Vector2i nodeCoordinates =
+                                    new Vector2i(
+                                        Mathf.RoundToInt(subGrid.GetPosition().x + x),
+                                        Mathf.RoundToInt(subGrid.GetPosition().y + y)
+                                    );
 
-                
-                Vector2i nodeCoordinate = new Vector2i(
-                                            Mathf.RoundToInt(subGrid.GetPosition().x + x),
-                                            Mathf.RoundToInt(subGrid.GetPosition().y + y)
-                                        );
+                Handles.color = NavGridTool.ChooseNodeColor(nodeCoordinates);
 
-                Handles.color = NavGridTool.ChooseNodeColor(nodeCoordinate);
-                
-                if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), buttonSize, buttonSize, Handles.SphereHandleCap))
-                {
+                //Draw nodes as buttons and watch for input
+                if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), NODE_SIZE, NODE_SIZE, Handles.SphereHandleCap))
                     HandleNodeClick(subGrid, x, y);
-                }
             }
         }
 
@@ -114,8 +113,9 @@ public static class SubGridTool
         Vector2i nodeCoordinates = new Vector2i(Mathf.RoundToInt(subGrid.GetPosition().x + xPos),
                                                     Mathf.RoundToInt(subGrid.GetPosition().y + yPos));
 
-        //This is a bit disgusting
-        (EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool).HandleNodeClick(subGrid.GetNavGrid(), nodeCoordinates);
+        //Get the active instance of NavGridTool and send it the NodeClick
+        NavGridTool navGridTool = (EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool);
+        navGridTool.HandleNodeClick(subGrid.GetNavGrid(), nodeCoordinates);
     }
 
 
