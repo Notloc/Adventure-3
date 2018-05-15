@@ -64,11 +64,12 @@ public class NavGrid : MonoBehaviour
         if (!ValidNode(nodeCoordinates))
             return false;
 
-        return nodes[(nodeCoordinates.y * width) + nodeCoordinates.x].IsPathable();
+        int nodeIndex = (nodeCoordinates.y * width) + nodeCoordinates.x;
+        return nodes[nodeIndex].IsPathable();
     }
 
-    //Toggles a square of nodes, corners of the square are defined by vector2s
-    public void ToggleNodes(Vector2i startingNode, Vector2i endingNode)
+    //Toggles the pathablity a square of nodes, the corners being defined by Vector2is
+    public void TogglePathablity(Vector2i startingNode, Vector2i endingNode)
     {
         if (!ValidNode(startingNode) || !ValidNode(endingNode))
             return;
@@ -92,7 +93,8 @@ public class NavGrid : MonoBehaviour
             {
                 for (int x = bottomLeft.x; x <= topRight.x; x++)
                 {
-                    nodes[(y * width) + x].SetPathable(!previousState);
+                    int nodeIndex = (y * width) + x;
+                    nodes[nodeIndex].SetPathable(!previousState);
                 }
             }
         }

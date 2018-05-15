@@ -114,9 +114,8 @@ public static class SubGridTool
         Vector2i nodeCoordinates = new Vector2i(Mathf.RoundToInt(subGrid.GetPosition().x + xPos),
                                                     Mathf.RoundToInt(subGrid.GetPosition().y + yPos));
 
-        NavGridTool.HandleNodeClick(subGrid.GetNavGrid(), nodeCoordinates);
-
-        //Debug.Log("Node " + (Mathf.RoundToInt(subGrid.GetPosition().x) + xPos) + ", " + (Mathf.RoundToInt(subGrid.GetPosition().y) + yPos) + " Clicked.");
+        //This is a bit disgusting
+        (EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool).HandleNodeClick(subGrid.GetNavGrid(), nodeCoordinates);
     }
 
 

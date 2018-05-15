@@ -15,14 +15,6 @@ public class EntityCI : EasyEditor
     private void OnEnable()
     {
         entity = (Entity)target;
-
-        noah = serializedObject.FindProperty("noah");
-
-        //health = serializedObject.FindProperty("health");
-        //stamina = serializedObject.FindProperty("stamina");
-        //mana = serializedObject.FindProperty("mana");
-
-        //skills = serializedObject.FindProperty("skills");
     }
 
     public override void OnInspectorGUI()
@@ -30,9 +22,7 @@ public class EntityCI : EasyEditor
         serializedObject.Update();
 
         DrawInfo();
-
         EditorGUILayout.Space();
-
 
         serializedObject.ApplyModifiedProperties();
         base.OnInspectorGUI();
@@ -42,12 +32,6 @@ public class EntityCI : EasyEditor
     {
         Header("Information");
         entity.name = EditorGUILayout.TextField("Name", entity.name);
-
-        GUILayout.BeginHorizontal("box");
-        {
-            EditorGUILayout.PropertyField(noah);
-        }
-        GUILayout.EndHorizontal();
     }
     
 }

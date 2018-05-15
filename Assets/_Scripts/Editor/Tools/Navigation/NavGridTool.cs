@@ -4,47 +4,65 @@ using UnityEngine;
 using UnityEditor;
 
 
-// Tool that allows easy editing of NavGrids via 3D GUI in the sceneview
-[InitializeOnLoad]
-public class NavGridTool : Editor
+// Tool that allows easy editing of NavGrids via 3D GUI in the sceneview and an editor window
+public class NavGridTool : EditorWindow
 {
-    static Vector2i NO_NODE = new Vector2i(-1, -1);
+// CONSTANTS
+    readonly static Vector2i NO_NODE = new Vector2i(-1, -1);
+    readonly static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
+    readonly static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
+    readonly static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.35f);
+// END CONSTANTS
 
-    static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
-    static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
-    static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.35f);
 
+// VARIABLES
     static NavGrid currentNavGrid;
     static SubGrid selectedSubGrid;
-
-    static int selectedTool = 0;
-
     static Vector2i selectedNode = NO_NODE;
+    int selectedTool = 0;
+    
+// END VARIABLES
 
-    //Life Cycle Code
-    static NavGridTool()
+// LIFE CYCLE
+    //Creates and shows the window, also registers for the OnSceneGUI delegate
+    [MenuItem("Window/NavGrid Tool")]
+    public static void ShowWindow()
     {
+        ResetVariables();
+
+        EditorWindow.GetWindow(typeof(NavGridTool));
         SceneView.onSceneGUIDelegate -= OnSceneGUI;
         SceneView.onSceneGUIDelegate += OnSceneGUI;
     }
+
+    //Ensures all static globals are reset properly
+    private static void ResetVariables()
+    {
+        currentNavGrid = null;
+        selectedSubGrid = new SubGrid();
+        selectedNode = NO_NODE;
+    }
+
+    //Unregisters from OnSceneGUI delegate
     void OnDestroy()
     {
         SceneView.onSceneGUIDelegate -= OnSceneGUI;
+        Debug.Log("Goodbye");
     }
+// END LIFE CYCLE
 
 
-    //Called once per Scene Frame
+// SCENE GUI
     static void OnSceneGUI(SceneView sceneView)
     {
-        if(NavGridSelected() == false)
+        //Only draw in the scene when a NavGrid is selected
+        if(IsNavGridSelected() == false)
             return;
 
-        //Draw
         selectedSubGrid = SubGridTool.DrawSubGrid(selectedSubGrid);
-        DrawToolsMenu(sceneView.position);
     }
 
-    private static bool NavGridSelected()
+    private static bool IsNavGridSelected()
     {
         GameObject selection = Selection.activeGameObject;
         if(selection)
@@ -63,36 +81,67 @@ public class NavGridTool : Editor
 
         return false;
     }
+// END SCENE GUI
 
 
-    static void DrawToolsMenu(Rect position)
+// WINDOW GUI
+    private void OnGUI()
     {
-        Handles.BeginGUI();
-        {
-            GUILayout.BeginArea(new Rect(0, position.height - 35, position.width, 20), EditorStyles.toolbar);
-            {
-                string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
-
-                int newTool = GUILayout.SelectionGrid(
-                    selectedTool,
-                    toolLabels,
-                    4,
-                    EditorStyles.toolbarButton,
-                    GUILayout.Width(300));
-
-                if(newTool != selectedTool)
-                {
-                    selectedTool = newTool;
-                    selectedNode = NO_NODE;
-                }
-
-            }
-            GUILayout.EndArea();
-        }
-        Handles.EndGUI();
+        DrawToolsMenu();
+        GUILayout.Space(30);
+        DrawNodeMenu();
     }
 
-    public static void HandleNodeClick(NavGrid navGrid, Vector2i nodeCoordinates)
+    private void DrawToolsMenu()
+    {
+        GUILayout.BeginVertical("box");
+        {
+            GUILayout.Label("Tools", EditorStyles.boldLabel);
+
+            string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
+
+            int newTool = GUILayout.SelectionGrid(
+                selectedTool,
+                toolLabels,
+                4,
+                EditorStyles.toolbarButton,
+                GUILayout.Width(300));
+
+            if (newTool != selectedTool)
+            {
+                selectedTool = newTool;
+                selectedNode = NO_NODE;
+            }
+
+        }
+        GUILayout.EndVertical();
+
+        
+    }
+
+    private void DrawNodeMenu()
+    {
+        GUILayout.BeginVertical("box");
+        {
+            if (selectedNode.Equals(NO_NODE))
+            {
+                GUILayout.Label("No Node Selected");
+            }
+            else
+            {
+                GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
+
+            }
+        }
+        GUILayout.EndVertical();
+
+
+    }
+// END WINDOW GUI
+
+
+// OTHER
+    public void HandleNodeClick(NavGrid navGrid, Vector2i nodeCoordinates)
     {
         //SELECT
         if (selectedTool == 0)
@@ -103,7 +152,7 @@ public class NavGridTool : Editor
         //SINGLE
         if (selectedTool == 1)
         {
-            navGrid.ToggleNodes(nodeCoordinates, nodeCoordinates);
+            navGrid.TogglePathablity(nodeCoordinates, nodeCoordinates);
         }
 
         //SQUARE
@@ -116,14 +165,15 @@ public class NavGridTool : Editor
             else
             {
                 //Toggle entire squares of walkable area
-                navGrid.ToggleNodes(selectedNode, nodeCoordinates);
+                navGrid.TogglePathablity(selectedNode, nodeCoordinates);
                 selectedNode = NO_NODE;
             }
         }
 
+        //Wall Mode
         if(selectedTool == 3)
         {
-            //Toggle sides of squares for walkable area
+            //Soon TM
         }
     }
 
@@ -145,5 +195,5 @@ public class NavGridTool : Editor
             return UNPATHABLE_NODE_COLOR;
         }
     }
-
+// END OTHER
 }
