@@ -26,13 +26,24 @@ public class NavGridTool : EditorWindow
 // LIFE CYCLE
     //Creates and shows the window, also registers for the OnSceneGUI delegate
     [MenuItem("Window/NavGrid Tool")]
-    public static void ShowWindow()
+    public static void CreateWindow()
     {
-        ResetVariables();
+        NavGridTool tool = EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool;
+        tool.OnSelectionChange();   // Manually call to handle a NavGrid being preselected
+    }
 
-        EditorWindow.GetWindow(typeof(NavGridTool));
-        SceneView.onSceneGUIDelegate -= OnSceneGUI;
-        SceneView.onSceneGUIDelegate += OnSceneGUI;
+    private void OnSelectionChange()
+    {
+        if(IsNavGridSelected())
+        {
+            ResetVariables();
+            SceneView.onSceneGUIDelegate -= OnSceneGUI;
+            SceneView.onSceneGUIDelegate += OnSceneGUI;
+        }
+        else
+        {
+            SceneView.onSceneGUIDelegate -= OnSceneGUI;
+        }
     }
 
     //Ensures all static globals are reset properly
@@ -47,7 +58,6 @@ public class NavGridTool : EditorWindow
     void OnDestroy()
     {
         SceneView.onSceneGUIDelegate -= OnSceneGUI;
-        Debug.Log("Goodbye");
     }
 // END LIFE CYCLE
 
@@ -98,45 +108,70 @@ public class NavGridTool : EditorWindow
         {
             GUILayout.Label("Tools", EditorStyles.boldLabel);
 
-            string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
-
-            int newTool = GUILayout.SelectionGrid(
-                selectedTool,
-                toolLabels,
-                4,
-                EditorStyles.toolbarButton,
-                GUILayout.Width(300));
-
-            if (newTool != selectedTool)
+            GUILayout.BeginHorizontal("box");
             {
-                selectedTool = newTool;
-                selectedNode = NO_NODE;
+                GUILayout.FlexibleSpace();
+
+                string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
+
+                int newTool = GUILayout.SelectionGrid(
+                    selectedTool,
+                    toolLabels,
+                    4,
+                    EditorStyles.toolbarButton,
+                    GUILayout.Width(300));
+
+                if (newTool != selectedTool)
+                {
+                    selectedTool = newTool;
+                    selectedNode = NO_NODE;
+                }
+
+                GUILayout.FlexibleSpace();
             }
+            GUILayout.EndHorizontal();
 
         }
-        GUILayout.EndVertical();
-
-        
+        GUILayout.EndVertical();     
     }
 
     private void DrawNodeMenu()
     {
         GUILayout.BeginVertical("box");
         {
-            if (selectedNode.Equals(NO_NODE))
-            {
-                GUILayout.Label("No Node Selected");
-            }
-            else
-            {
-                GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
+            GUILayout.Label("Selected Node", EditorStyles.boldLabel);
 
+            GUILayout.BeginVertical("box");
+            {
+                if (selectedNode.Equals(NO_NODE))
+                {
+                    GUILayout.Label("No Node Selected");
+                }
+                else
+                {
+                    DrawNodeControls();
+                }
+            }
+            GUILayout.EndVertical();
+        }
+        GUILayout.EndVertical();
+    }
+
+    private void DrawNodeControls()
+    {
+        GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
+
+        GUILayout.BeginVertical("box");
+        {
+            if (GUILayout.Button("Open Grid Here"))
+            {
+                //hmm
             }
         }
         GUILayout.EndVertical();
 
-
     }
+
 // END WINDOW GUI
 
 
