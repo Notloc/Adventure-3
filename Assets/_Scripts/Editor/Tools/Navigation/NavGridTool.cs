@@ -220,7 +220,7 @@ public class NavGridTool : EditorWindow
     {
         GUILayout.Label("Settings", EditorStyles.boldLabel);
 
-        MAX_HANDLES_PER_FRAME = EditorGUILayout.IntField("Node Limit", MAX_HANDLES_PER_FRAME);
+        MAX_HANDLES_PER_FRAME = Mathf.Clamp(EditorGUILayout.IntField("Node Limit", MAX_HANDLES_PER_FRAME), 25, 10000);
 
 
         if (GUILayout.Button("Apply Now"))
@@ -228,10 +228,9 @@ public class NavGridTool : EditorWindow
             if (currentNavGrid)
             {
                 selectedSubGrid = SubGridTool.PrepareNavGridForDisplay(currentNavGrid, MAX_HANDLES_PER_FRAME);
+                SceneView.RepaintAll();
             }
-            EditorPrefs.SetInt("MAX_HANDLES", MAX_HANDLES_PER_FRAME);
         }
-
     }
 
 // END WINDOW GUI
