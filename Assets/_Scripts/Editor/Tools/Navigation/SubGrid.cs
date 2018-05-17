@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/**
-* A structure thats contains a piece of a navGrid
-* As well as possibly more SubGrids
-*/
-public struct SubGrid
+public class SubGrid
 {
     NavGrid navGrid;
 
-    Vector2 localStartingPoint;
+    Vector2i originCoordinate;
     int width, height;
 
+    SubGrid parent;
     List<SubGrid> subGrids;
 
-    public SubGrid(NavGrid navGrid, Vector2 startingPoint, int width, int height)
+    public SubGrid(NavGrid navGrid, SubGrid parent, Vector2i originCoordinate, int width, int height)
     {
         this.navGrid = navGrid;
+        this.parent = parent;
 
-        localStartingPoint = new Vector2(Mathf.RoundToInt(startingPoint.x), Mathf.RoundToInt(startingPoint.y));
+        this.originCoordinate = originCoordinate;
 
         this.width = width;
         this.height = height;
@@ -27,16 +25,27 @@ public struct SubGrid
         subGrids = new List<SubGrid>();
     }
 
-    public void AddSubGrid(SubGrid newGrid)
+    public NavGrid GetNavGrid()
+    {
+        return navGrid;
+    }
+
+    public SubGrid GetParentSubGrid()
+    {
+        return parent;
+    }
+
+    public void AddChildSubGrid(SubGrid newGrid)
     {
         subGrids.Add(newGrid);
     }
 
-    public List<SubGrid> GetSubGrids()
+    public List<SubGrid> GetChildSubGrids()
     {
         return subGrids;
     }
 
+    
 
     public int GetWidth()
     {
@@ -48,14 +57,11 @@ public struct SubGrid
         return height;
     }
 
-    public Vector2 GetPosition()
+    public Vector2i GetOriginCoordinate()
     {
-        return localStartingPoint;
+        return originCoordinate;
     }
 
-    public NavGrid GetNavGrid()
-    {
-        return navGrid;
-    }
+    
 
 }

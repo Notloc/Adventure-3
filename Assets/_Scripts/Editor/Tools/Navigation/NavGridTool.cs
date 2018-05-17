@@ -7,38 +7,52 @@ using UnityEditor;
 // Tool that allows easy editing of NavGrids via 3D GUI in the sceneview and an editor window
 public class NavGridTool : EditorWindow
 {
+
+    int MAX_HANDLES_PER_FRAME = 400;
+
 // CONSTANTS
+    //SubGrids
+    readonly static Color SUBGRID_COLOR = new Color(0f, 0.2f, 1.0f);
+
+    //Nodes
     readonly static Vector2i NO_NODE = new Vector2i(-1, -1);
     readonly static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
     readonly static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
     readonly static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.35f);
 // END CONSTANTS
 
-
 // VARIABLES
-    static NavGrid currentNavGrid;
-    static SubGrid selectedSubGrid;
-    static Vector2i selectedNode = NO_NODE;
+    NavGrid currentNavGrid;
+    SubGrid selectedSubGrid;
+    Vector2i selectedNode = NO_NODE;
     int selectedTool = 0;
-    
+    int selectedTab = 0;
 // END VARIABLES
 
 // LIFE CYCLE
-    //Creates and shows the window, also registers for the OnSceneGUI delegate
+    //Creates and shows the window
     [MenuItem("Window/NavGrid Tool")]
     public static void CreateWindow()
     {
-        NavGridTool tool = EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool;
-        tool.OnSelectionChange();   // Manually call to handle a NavGrid being preselected
+        NavGridTool tool = EditorWindow.GetWindow(typeof(NavGridTool), false, "NavGrid Tools") as NavGridTool;
+
+        if (EditorPrefs.HasKey("MAX_HANDLES"))
+            tool.MAX_HANDLES_PER_FRAME = EditorPrefs.GetInt("MAX_HANDLES");
+
+        tool.OnSelectionChange();   //Manually call to handle a NavGrid being preselected
     }
 
+    //Fires when the active scene object changes
     private void OnSelectionChange()
     {
-        if(IsNavGridSelected())
+        currentNavGrid = GetSelectedNavGrid();
+
+        if (currentNavGrid)
         {
-            ResetVariables();
             SceneView.onSceneGUIDelegate -= OnSceneGUI;
             SceneView.onSceneGUIDelegate += OnSceneGUI;
+
+            selectedSubGrid = SubGridTool.PrepareNavGridForDisplay(currentNavGrid, MAX_HANDLES_PER_FRAME);
         }
         else
         {
@@ -46,93 +60,118 @@ public class NavGridTool : EditorWindow
         }
     }
 
-    //Ensures all static globals are reset properly
-    private static void ResetVariables()
+    private NavGrid GetSelectedNavGrid()
     {
-        currentNavGrid = null;
-        selectedSubGrid = new SubGrid();
-        selectedNode = NO_NODE;
+        GameObject selection = Selection.activeGameObject;
+        if (selection)
+        {
+            NavGrid navGrid = selection.GetComponent<NavGrid>();
+            if (navGrid)
+            {
+                return navGrid;
+            }
+        }
+
+        return null;
     }
 
     //Unregisters from OnSceneGUI delegate
     void OnDestroy()
     {
         SceneView.onSceneGUIDelegate -= OnSceneGUI;
+        EditorPrefs.SetInt("MAX_HANDLES", MAX_HANDLES_PER_FRAME);
     }
 // END LIFE CYCLE
 
 
 // SCENE GUI
-    static void OnSceneGUI(SceneView sceneView)
+    //Renders the selected SubGrid
+    void OnSceneGUI(SceneView sceneView)
     {
-        //Only draw in the scene when a NavGrid is selected
-        if(IsNavGridSelected() == false)
-            return;
-
-        selectedSubGrid = SubGridTool.DrawSubGrid(selectedSubGrid);
+        selectedSubGrid = SubGridTool.DrawSubGrid(selectedSubGrid, SUBGRID_COLOR);
     }
-
-    private static bool IsNavGridSelected()
-    {
-        GameObject selection = Selection.activeGameObject;
-        if(selection)
-        {
-            NavGrid navGrid = selection.GetComponent<NavGrid>();
-            if (navGrid)
-            {
-                if(currentNavGrid != navGrid)
-                {
-                    currentNavGrid = navGrid;
-                    selectedSubGrid = SubGridTool.PrepareNavGridForDisplay(currentNavGrid);
-                }
-                return true;
-            }
-        }
-
-        return false;
-    }
-// END SCENE GUI
+    // END SCENE GUI
 
 
-// WINDOW GUI
+    // WINDOW GUI
     private void OnGUI()
     {
-        DrawToolsMenu();
-        GUILayout.Space(30);
-        DrawNodeMenu();
+        GUILayout.BeginVertical("box");
+        {
+            DrawTitle();
+            DrawTabSelection();
+        }
+        GUILayout.EndVertical();
+
+        GUILayout.Space(20);
+
+        GUILayout.BeginVertical("box");
+        {
+            switch (selectedTab)
+            {
+                case 0:
+                    DrawToolsMenu();
+                    GUILayout.Space(15);
+                    DrawNodeMenu();
+                    break;
+
+                case 1:
+                    DrawSettingsMenu();
+                    break;
+            }
+        }
+        GUILayout.EndVertical();
+    }
+
+    private void DrawTitle()
+    {
+        GUILayout.BeginHorizontal();
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("NAVGRID TOOLS", EditorStyles.largeLabel);
+            GUILayout.FlexibleSpace();
+        }
+        GUILayout.EndHorizontal();
+    }
+
+    private void DrawTabSelection()
+    {
+            string[] tabNames = new string[] {"Tools", "Settings" };
+
+            selectedTab = GUILayout.SelectionGrid(
+                                        selectedTab,
+                                        tabNames,
+                                        2);
     }
 
     private void DrawToolsMenu()
     {
-        GUILayout.BeginVertical("box");
+
+        GUILayout.Label("Tools", EditorStyles.boldLabel);
+
+        GUILayout.BeginHorizontal("box");
         {
-            GUILayout.Label("Tools", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
 
-            GUILayout.BeginHorizontal("box");
+            string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
+
+            int newTool = GUILayout.SelectionGrid(
+                selectedTool,
+                toolLabels,
+                4,
+                EditorStyles.toolbarButton,
+                GUILayout.Width(300));
+
+            if (newTool != selectedTool)
             {
-                GUILayout.FlexibleSpace();
-
-                string[] toolLabels = new string[] { "Select", "Single", "Square", "Wall Mode" };
-
-                int newTool = GUILayout.SelectionGrid(
-                    selectedTool,
-                    toolLabels,
-                    4,
-                    EditorStyles.toolbarButton,
-                    GUILayout.Width(300));
-
-                if (newTool != selectedTool)
-                {
-                    selectedTool = newTool;
-                    selectedNode = NO_NODE;
-                }
-
-                GUILayout.FlexibleSpace();
+                selectedTool = newTool;
+                selectedNode = NO_NODE;
             }
-            GUILayout.EndHorizontal();
 
+            GUILayout.FlexibleSpace();
         }
-        GUILayout.EndVertical();     
+        GUILayout.EndHorizontal();
+ 
     }
 
     private void DrawNodeMenu()
@@ -141,18 +180,15 @@ public class NavGridTool : EditorWindow
         {
             GUILayout.Label("Selected Node", EditorStyles.boldLabel);
 
-            GUILayout.BeginVertical("box");
+            if (selectedNode.Equals(NO_NODE))
             {
-                if (selectedNode.Equals(NO_NODE))
-                {
-                    GUILayout.Label("No Node Selected");
-                }
-                else
-                {
-                    DrawNodeControls();
-                }
+                GUILayout.Label("No Node Selected");
             }
-            GUILayout.EndVertical();
+            else
+            {
+                DrawNodeControls();
+            }
+
         }
         GUILayout.EndVertical();
     }
@@ -161,14 +197,35 @@ public class NavGridTool : EditorWindow
     {
         GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
 
-        GUILayout.BeginVertical("box");
+        if (GUILayout.Button("Parent SubGrid"))
         {
-            if (GUILayout.Button("Open Grid Here"))
+            SubGrid parentSubGrid = selectedSubGrid.GetParentSubGrid();
+            if (parentSubGrid != null)
             {
-                //hmm
+                selectedSubGrid = parentSubGrid;
             }
         }
-        GUILayout.EndVertical();
+
+        if (GUILayout.Button("Open Grid Here"))
+        {
+            //hmm
+        }
+    }
+
+    private void DrawSettingsMenu()
+    {
+        GUILayout.Label("Settings", EditorStyles.boldLabel);
+
+        MAX_HANDLES_PER_FRAME = EditorGUILayout.IntField("Node Limit", MAX_HANDLES_PER_FRAME);
+
+
+        if (GUILayout.Button("Apply Now"))
+        {
+            if (currentNavGrid)
+            {
+                selectedSubGrid = SubGridTool.PrepareNavGridForDisplay(currentNavGrid, MAX_HANDLES_PER_FRAME);
+            }
+        }
 
     }
 
@@ -213,7 +270,7 @@ public class NavGridTool : EditorWindow
     }
 
     //Returns what color the given node should be
-    public static Color ChooseNodeColor(Vector2i nodeCoordinate)
+    public Color ChooseNodeColor(Vector2i nodeCoordinate)
     {
         if (nodeCoordinate.Equals(selectedNode))
         {
