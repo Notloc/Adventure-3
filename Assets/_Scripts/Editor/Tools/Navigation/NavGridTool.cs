@@ -7,9 +7,6 @@ using UnityEditor;
 // Tool that allows easy editing of NavGrids via 3D GUI in the sceneview and an editor window
 public class NavGridTool : EditorWindow
 {
-
-    int MAX_HANDLES_PER_FRAME = 400;
-
 // CONSTANTS
     //SubGrids
     readonly static Color SUBGRID_COLOR = new Color(0f, 0.2f, 1.0f);
@@ -29,6 +26,9 @@ public class NavGridTool : EditorWindow
     int selectedTab = 0;
 // END VARIABLES
 
+// SETTINGS
+    int MAX_HANDLES_PER_FRAME = 400;
+
 // LIFE CYCLE
     //Creates and shows the window
     [MenuItem("Window/NavGrid Tool")]
@@ -40,6 +40,12 @@ public class NavGridTool : EditorWindow
             tool.MAX_HANDLES_PER_FRAME = EditorPrefs.GetInt("MAX_HANDLES");
 
         tool.OnSelectionChange();   //Manually call to handle a NavGrid being preselected
+    }
+
+    private void Awake()
+    {
+        if (EditorPrefs.HasKey("MAX_HANDLES"))
+            MAX_HANDLES_PER_FRAME = EditorPrefs.GetInt("MAX_HANDLES");
     }
 
     //Fires when the active scene object changes
@@ -225,6 +231,7 @@ public class NavGridTool : EditorWindow
             {
                 selectedSubGrid = SubGridTool.PrepareNavGridForDisplay(currentNavGrid, MAX_HANDLES_PER_FRAME);
             }
+            EditorPrefs.SetInt("MAX_HANDLES", MAX_HANDLES_PER_FRAME);
         }
 
     }
