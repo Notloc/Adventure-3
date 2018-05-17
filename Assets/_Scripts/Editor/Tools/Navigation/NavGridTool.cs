@@ -34,18 +34,16 @@ public class NavGridTool : EditorWindow
     [MenuItem("Window/NavGrid Tool")]
     public static void CreateWindow()
     {
-        NavGridTool tool = EditorWindow.GetWindow(typeof(NavGridTool), false, "NavGrid Tools") as NavGridTool;
-
-        if (EditorPrefs.HasKey("MAX_HANDLES"))
-            tool.MAX_HANDLES_PER_FRAME = EditorPrefs.GetInt("MAX_HANDLES");
-
-        tool.OnSelectionChange();   //Manually call to handle a NavGrid being preselected
+        EditorWindow.GetWindow(typeof(NavGridTool), false, "NavGrid Tools");
     }
 
+    //Called on initialization
     private void Awake()
     {
         if (EditorPrefs.HasKey("MAX_HANDLES"))
             MAX_HANDLES_PER_FRAME = EditorPrefs.GetInt("MAX_HANDLES");
+
+        OnSelectionChange();   //Manually call to handle a NavGrid being preselected
     }
 
     //Fires when the active scene object changes
