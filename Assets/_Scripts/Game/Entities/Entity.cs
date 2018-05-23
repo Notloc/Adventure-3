@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-
-[RequireComponent(typeof(Rigidbody))]
-public class Entity : MonoBehaviour, iDamagable
+﻿namespace Adventure.Game.Entities
 {
-    void iDamagable.Damage(float amount)
+    using UnityEngine;
+
+    [RequireComponent(typeof(Rigidbody))]
+    public class Entity : MonoBehaviour
     {
-        Debug.Log(this.name+" took " + amount + " damage.");
+        
     }
 }

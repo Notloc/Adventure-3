@@ -1,44 +1,103 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-
-[CustomEditor(typeof(NavGrid))]
-public class NavGridEditor : Editor
+﻿namespace Adventure.Engine.Navigation.Internal
 {
-    private NavGrid navGrid;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEditor;
 
-    SerializedProperty nodesProp, widthProp, heightProp, offsetProp;
-
-    private void OnEnable()
+    [CustomEditor(typeof(NavGrid))]
+    public class NavGridEditor : Editor
     {
-        navGrid = target as NavGrid;
+        private NavGrid navGrid;
 
-        //Get properties
-        nodesProp = serializedObject.FindProperty("nodes");
-        widthProp = serializedObject.FindProperty("width");
-        heightProp = serializedObject.FindProperty("height");
-        offsetProp = serializedObject.FindProperty("positionOffset");
-    }
+        SerializedProperty nodesProp, widthProp, heightProp, offsetProp;
 
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
+        //Resize Variables
+        int newWidth;
+        int newHeight;
 
-        if (GUILayout.Button("Generate Nodes"))
+        int selectedAnchorPoint;
+
+        private void OnEnable()
         {
-            navGrid.GenerateNodes();
+            navGrid = target as NavGrid;
+
+            //Get properties
+            nodesProp = serializedObject.FindProperty("nodes");
+            widthProp = serializedObject.FindProperty("width");
+            heightProp = serializedObject.FindProperty("height");
+            offsetProp = serializedObject.FindProperty("positionOffset");
         }
 
-        EditorGUILayout.PropertyField(widthProp);
-        EditorGUILayout.PropertyField(heightProp);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-        EditorGUILayout.Space();
+            DrawResizeControls();
 
-        EditorGUILayout.PropertyField(offsetProp);
 
-        serializedObject.ApplyModifiedProperties();
-        //base.OnInspectorGUI();
+
+            EditorGUILayout.PropertyField(widthProp);
+            EditorGUILayout.PropertyField(heightProp);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(offsetProp);
+
+            serializedObject.ApplyModifiedProperties();
+            //base.OnInspectorGUI();
+        }
+
+        private void DrawResizeControls()
+        {
+            GUILayout.BeginVertical("box");
+            {
+                if (GUILayout.Button("Resize Grid"))
+                {
+                    ResizeGrid();
+                }
+
+                newWidth = EditorGUILayout.IntField("New Width", newWidth);
+                newHeight = EditorGUILayout.IntField("New Height", newHeight);
+
+                //Anchor selection
+                GUILayout.BeginVertical("box");
+                {
+                    GUILayout.Label("Anchor Point");
+
+                    string[] labels = { "North-East", "North-West", "South-East", "South-West" };
+                    selectedAnchorPoint = GUILayout.SelectionGrid(selectedAnchorPoint, labels, 4, "toggle");
+                }
+                GUILayout.EndVertical();
+
+            }
+            GUILayout.EndVertical();
+        }
+
+        private void ResizeGrid()
+        {
+            AnchorPoint anchorPoint = AnchorPoint.NORTH_EAST;
+            switch (selectedAnchorPoint)
+            {
+                case 0:
+                    anchorPoint = AnchorPoint.NORTH_EAST;
+                    break;
+
+                case 1:
+                    anchorPoint = AnchorPoint.NORTH_WEST;
+                    break;
+
+                case 2:
+                    anchorPoint = AnchorPoint.SOUTH_EAST;
+                    break;
+
+                case 3:
+                    anchorPoint = AnchorPoint.SOUTH_WEST;
+                    break;
+
+            }
+
+            navGrid.ResizeGrid(newWidth, newHeight, anchorPoint);
+        }
     }
 }
-

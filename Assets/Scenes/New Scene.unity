@@ -400,13 +400,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -500,13 +493,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -600,13 +586,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -700,13 +679,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -800,13 +772,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -900,13 +865,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -1000,13 +958,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -1100,13 +1051,6 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
   - data: 0
   - data: 0
   - data: 0
@@ -1200,13 +1144,69 @@ MonoBehaviour:
   - data: 0
   - data: 0
   - data: 0
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
-  - data: 16
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
+  - data: 0
   - data: 0
   - data: 0
   - data: 0
@@ -10367,9 +10367,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1234810749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 078d3d04d3e48a24c9b07fbff061f5ae, type: 3}
+  m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats:
+    health: 0
+    movementSpeed: 0
 --- !u!54 &1234810752
 Rigidbody:
   m_ObjectHideFlags: 0

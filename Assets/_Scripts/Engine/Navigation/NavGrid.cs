@@ -1,102 +1,121 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEditor;
-
-public class NavGrid : MonoBehaviour
+﻿namespace Adventure.Engine.Navigation
 {
-    [SerializeField] Node[] nodes;
-    [SerializeField] int width;
-    [SerializeField] int height;
+    using Navigation.Internal;
+    using UnityEngine;
 
-    [SerializeField] Vector3 positionOffset;
+    using System.Collections;
+    using System.Threading;
 
-    //Creates the NavGrid's nodes
-    public void GenerateNodes()
+    public class NavGrid : MonoBehaviour
     {
-        if (width <= 0 || height <= 0)
+        [SerializeField] Node[] nodes;
+
+        [SerializeField] int width;
+        public int Width
         {
-            return;
-        }
-
-        nodes = new Node[width * height];
-
-    }
-
-//ACCESSORS
-    //Gets the navgrids origin position in 3D space
-    public Vector3 GetWorldPosition()
-    {
-        return this.transform.position + positionOffset;
-    }
-
-    public int GetWidth()
-    {
-        return width;
-    }
-    public int GetHeight()
-    {
-        return height;
-    }
-
-
- //NODE METHODS
-    //Checks if a nodes coordinates are valid for the NavGrid
-    private bool ValidNode(Vector2i nodeCoordinates)
-    {
-        if(nodeCoordinates.x < 0 || nodeCoordinates.x >= width)
-        {
-            return false;
-        }
-
-        if (nodeCoordinates.y < 0 || nodeCoordinates.y >= height)
-        {
-            return false;
-        }
-
-        return true;
-    }
-    
-    //Checks if a node is pathable
-    public bool IsPathable(Vector2i nodeCoordinates)
-    {
-        if (!ValidNode(nodeCoordinates))
-            return false;
-
-        int nodeIndex = (nodeCoordinates.y * width) + nodeCoordinates.x;
-        return nodes[nodeIndex].IsPathable();
-    }
-
-    //Toggles the pathablity a square of nodes, the corners being defined by Vector2is
-    public void TogglePathablity(Vector2i startingNode, Vector2i endingNode)
-    {
-        if (!ValidNode(startingNode) || !ValidNode(endingNode))
-            return;
-
-        int startingNodeIndex = (startingNode.y * width) + startingNode.x;
-        bool previousState = nodes[startingNodeIndex].IsPathable();
-
-        //Toggle Single Node
-        if (startingNode.Equals(endingNode))
-        {
-            nodes[startingNodeIndex].SetPathable(!previousState);
-        }
-
-        //Toggle Square of Nodes
-        else
-        {
-            Vector2i bottomLeft = new Vector2i(Mathf.Min(startingNode.x, endingNode.x), Mathf.Min(startingNode.y, endingNode.y));
-            Vector2i topRight = new Vector2i(Mathf.Max(startingNode.x, endingNode.x), Mathf.Max(startingNode.y, endingNode.y));
-
-            for(int y = bottomLeft.y; y <= topRight.y; y++)
+            get
             {
-                for (int x = bottomLeft.x; x <= topRight.x; x++)
+                return width;
+            }
+        }
+
+        [SerializeField] int height;
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+        }
+
+        [SerializeField] Vector3 positionOffset;
+
+        //Creates the NavGrid's nodes
+        public void ResizeGrid(int newWidth, int newHeight, AnchorPoint anchor)
+        {
+            if (newWidth < 0 || newHeight < 0)
+            {
+                return;
+            }
+
+            //If there is no existing grid, just make a new empty one
+            if (width == 0 || height == 0)
+            {
+                width = newWidth;
+                height = newHeight;
+                nodes = new Node[width * height];
+                return;
+            }
+
+            Node[] newNodes = new Node[newWidth * newHeight];
+
+            nodes = new Node[width * height];
+
+        }
+
+        //Gets the navgrids origin position in 3D space
+        public Vector3 GetOriginWorldPosition()
+        {
+            return this.transform.position + positionOffset;
+        }
+
+        //Checks if a nodes coordinates are valid for the NavGrid
+        private bool ValidNode(Vector2i nodeCoordinates)
+        {
+            if (nodeCoordinates.x < 0 || nodeCoordinates.x >= width)
+            {
+                return false;
+            }
+
+            if (nodeCoordinates.y < 0 || nodeCoordinates.y >= height)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        //Checks if a node is pathable
+        public bool IsPathable(Vector2i nodeCoordinates)
+        {
+            if (!ValidNode(nodeCoordinates))
+                return false;
+
+            int nodeIndex = (nodeCoordinates.y * width) + nodeCoordinates.x;
+            return nodes[nodeIndex].IsPathable();
+        }
+
+        //Toggles the pathablity a square of nodes, the corners being defined by Vector2is
+        public void TogglePathablity(Vector2i startingNode, Vector2i endingNode)
+        {
+            if (!ValidNode(startingNode) || !ValidNode(endingNode))
+                return;
+
+            int startingNodeIndex = (startingNode.y * width) + startingNode.x;
+            bool previousState = nodes[startingNodeIndex].IsPathable();
+
+            //Toggle Single Node
+            if (startingNode.Equals(endingNode))
+            {
+                nodes[startingNodeIndex].SetPathable(!previousState);
+            }
+
+            //Toggle Square of Nodes
+            else
+            {
+                Vector2i bottomLeft = new Vector2i(Mathf.Min(startingNode.x, endingNode.x), Mathf.Min(startingNode.y, endingNode.y));
+                Vector2i topRight = new Vector2i(Mathf.Max(startingNode.x, endingNode.x), Mathf.Max(startingNode.y, endingNode.y));
+
+                for (int y = bottomLeft.y; y <= topRight.y; y++)
                 {
-                    int nodeIndex = (y * width) + x;
-                    nodes[nodeIndex].SetPathable(!previousState);
+                    for (int x = bottomLeft.x; x <= topRight.x; x++)
+                    {
+                        int nodeIndex = (y * width) + x;
+                        nodes[nodeIndex].SetPathable(!previousState);
+                    }
                 }
             }
         }
+
     }
 }
