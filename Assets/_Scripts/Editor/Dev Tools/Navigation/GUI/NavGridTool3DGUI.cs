@@ -6,12 +6,12 @@
     using UnityEngine;
     using UnityEditor;
 
-    public class NavGridTool3DGUI
+    public static class NavGridTool3DGUI
     {
         readonly static Color SUBGRID_COLOR = new Color(0f, 0.2f, 1.0f, 0.8f);
 
         //Draws the given SubGrid and its contents
-        public void DrawSubGrid(NavGridTool tool)
+        public static void DrawSubGrid(NavGridTool tool)
         {
             SubGrid selectedSubGrid = tool.SelectedSubGrid;
 
@@ -34,7 +34,7 @@
             }
             else
             {
-                DrawNodeHandles(selectedSubGrid);
+                DrawNodeHandles(tool, selectedSubGrid);
             }
         }
 
@@ -74,7 +74,7 @@
             return false;
         }
 
-        private static void DrawNodeHandles(SubGrid subGrid)
+        private static void DrawNodeHandles(NavGridTool tool, SubGrid subGrid)
         {
             float NODE_SIZE = 0.45f;
 
@@ -85,10 +85,6 @@
 
             int width = subGrid.Width;
             int height = subGrid.Height;
-
-            NavGridTool navGridTool = EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool;
-            if (!navGridTool)
-                return;
 
             //Draw each node
             for (int y = 0; y < height; y++)
@@ -101,7 +97,7 @@
                                             subGridOriginPosition.y + y
                                         );
 
-                    Handles.color = navGridTool.ChooseNodeColor(nodeCoordinates);
+                    Handles.color = tool.ChooseNodeColor(nodeCoordinates);
 
                     //Draw nodes as buttons and watch for input
                     if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), NODE_SIZE, NODE_SIZE, Handles.CubeHandleCap))

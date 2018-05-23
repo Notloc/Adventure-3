@@ -27,22 +27,20 @@
             widthProp = serializedObject.FindProperty("width");
             heightProp = serializedObject.FindProperty("height");
             offsetProp = serializedObject.FindProperty("positionOffset");
+
+            newWidth = widthProp.intValue;
+            newHeight = heightProp.intValue;
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            DrawResizeControls();
-
-
-
-            EditorGUILayout.PropertyField(widthProp);
-            EditorGUILayout.PropertyField(heightProp);
-
-            EditorGUILayout.Space();
-
+            EditorGUILayout.LabelField("Width: " + widthProp.intValue);
+            EditorGUILayout.LabelField("Height: " + heightProp.intValue);
             EditorGUILayout.PropertyField(offsetProp);
+
+            DrawResizeControls();
 
             serializedObject.ApplyModifiedProperties();
             //base.OnInspectorGUI();

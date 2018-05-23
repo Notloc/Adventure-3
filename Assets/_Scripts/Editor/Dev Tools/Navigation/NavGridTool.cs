@@ -55,7 +55,6 @@
         }
 
         NavGridTool2DGUI gui2D;
-        NavGridTool3DGUI gui3D;
 
         int _NODE_RENDER_LIMIT = 400;
         public int NODE_RENDER_LIMIT
@@ -82,7 +81,6 @@
         private void Awake()
         {
             gui2D = new NavGridTool2DGUI();
-            gui3D = new NavGridTool3DGUI();
 
             if (EditorPrefs.HasKey("MAX_HANDLES"))
                 NODE_RENDER_LIMIT = EditorPrefs.GetInt("MAX_HANDLES");
@@ -134,12 +132,17 @@
         //3D GUI
         private void OnSceneGUI(SceneView sceneView)
         {
-            gui3D.DrawSubGrid(this);
+            NavGridTool3DGUI.DrawSubGrid(this);
         }
 
         //2D GUI
         private void OnGUI()
         {
+            if(gui2D == null)
+            {
+                gui2D = new NavGridTool2DGUI();
+            }
+
             gui2D.Render2DGUI(this);
         }
 

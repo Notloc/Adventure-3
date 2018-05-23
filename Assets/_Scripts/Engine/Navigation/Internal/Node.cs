@@ -48,6 +48,5 @@
                 data = (byte)(data ^ update);
             }
         }
-
     }
 }
