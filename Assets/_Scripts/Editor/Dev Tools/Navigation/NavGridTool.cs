@@ -11,13 +11,19 @@
     public class NavGridTool : EditorWindow
     {
         //Constants
-        readonly static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.35f);
-        readonly static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.35f);
-        readonly static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.35f);
-        readonly static Vector2i NO_NODE = new Vector2i(-1, -1);
+        readonly static Color PATHABLE_NODE_COLOR = new Color(0f, 0.2f, 1f, 0.55f);
+        readonly static Color UNPATHABLE_NODE_COLOR = new Color(1f, 0.2f, 0f, 0.55f);
+        readonly static Color SELECTED_NODE_COLOR = new Color(0f, 1f, 0f, 0.55f);
 
 
         NavGrid currentNavGrid;
+        public NavGrid CurrentNavGrid
+        {
+            get
+            {
+                return currentNavGrid;
+            }
+        }
 
         SubGrid _selectedSubGrid;
         public SubGrid SelectedSubGrid
@@ -28,8 +34,8 @@
             }
         }
 
-        Vector2i _selectedNode;
-        public Vector2i SelectedNode
+        Vector2Int _selectedNode;
+        public Vector2Int SelectedNode
         {
             get
             {
@@ -55,6 +61,28 @@
         }
 
         NavGridTool2DGUI gui2D;
+        public NavGridTool2DGUI GUI2D
+        {
+            get
+            {
+                if (gui2D == null)
+                    return new NavGridTool2DGUI();
+
+                return gui2D;
+            }
+        }
+
+        NavGridTool3DGUI gui3D;
+        public NavGridTool3DGUI GUI3D
+        {
+            get
+            {
+                if (gui3D == null)
+                    gui3D = new NavGridTool3DGUI();
+                
+                return gui3D;
+            }
+        }
 
         int _NODE_RENDER_LIMIT = 400;
         public int NODE_RENDER_LIMIT
@@ -81,6 +109,7 @@
         private void Awake()
         {
             gui2D = new NavGridTool2DGUI();
+            gui3D = new NavGridTool3DGUI();
 
             if (EditorPrefs.HasKey("MAX_HANDLES"))
                 NODE_RENDER_LIMIT = EditorPrefs.GetInt("MAX_HANDLES");
@@ -132,16 +161,17 @@
         //3D GUI
         private void OnSceneGUI(SceneView sceneView)
         {
-            NavGridTool3DGUI.DrawSubGrid(this);
+            if(gui3D == null)
+                gui3D = new NavGridTool3DGUI();
+
+            gui3D.DrawSubGrid(this);
         }
 
         //2D GUI
         private void OnGUI()
         {
             if(gui2D == null)
-            {
                 gui2D = new NavGridTool2DGUI();
-            }
 
             gui2D.Render2DGUI(this);
         }
@@ -149,12 +179,19 @@
 
 
         //Input Handling
-        public void HandleNodeClick(Vector2i nodeCoordinates)
+        public void HandleNodeClick(Vector2Int nodeCoordinates)
         {
             //SELECT
             if (SelectedTool == 0)
             {
-                SelectedNode = nodeCoordinates;
+                if(SelectedNode == nodeCoordinates)
+                {
+                    SelectedNode = NavGrid.NO_NODE;
+                }
+                else
+                {
+                    SelectedNode = nodeCoordinates;
+                }
             }
 
             //SINGLE
@@ -166,7 +203,7 @@
             //SQUARE
             if (SelectedTool == 2)
             {
-                if (SelectedNode.Equals(NO_NODE))
+                if (SelectedNode.Equals(NavGrid.NO_NODE))
                 {
                     SelectedNode = nodeCoordinates;
                 }
@@ -174,18 +211,21 @@
                 {
                     //Toggle entire squares of walkable area
                     currentNavGrid.TogglePathablity(SelectedNode, nodeCoordinates);
-                    SelectedNode = NO_NODE;
+                    SelectedNode = NavGrid.NO_NODE;
                 }
             }
         }
 
         public void UnselectNode()
         {
-            SelectedNode = NO_NODE;
+            SelectedNode = NavGrid.NO_NODE;
         }
 
         public void SelectParentSubGrid()
         {
+            if (_selectedSubGrid == null || _selectedSubGrid.GetParentSubGrid() == null)
+                return;
+
             SubGrid parentSubGrid = _selectedSubGrid.GetParentSubGrid();
             if (parentSubGrid != null)
             {
@@ -205,10 +245,10 @@
 
         public void CreateSubGridAtSelection()
         {
-            if (SelectedNode.Equals(NO_NODE))
+            if (SelectedNode.Equals(NavGrid.NO_NODE))
                 return;
 
-            Vector2i point = _selectedNode;
+            Vector2Int point = _selectedNode;
             point.x = Mathf.Clamp(point.x - (_selectedSubGrid.Width/2), 0, currentNavGrid.Width - 1);
             point.y = Mathf.Clamp(point.y - (_selectedSubGrid.Height/ 2), 0, currentNavGrid.Height - 1);
 
@@ -221,13 +261,19 @@
             if (currentNavGrid)
             {
                 _selectedSubGrid = SubGridGenerator.CreateSubGrids(currentNavGrid, NODE_RENDER_LIMIT);
+                _selectedNode = NavGrid.NO_NODE;
                 SceneView.RepaintAll();
             }
         }
 
         //Returns what color the given node should be
-        public Color ChooseNodeColor(Vector2i nodeCoordinate)
+        public Color ChooseNodeColor(Vector2Int nodeCoordinate)
         {
+            if(currentNavGrid == null)
+            {
+                currentNavGrid = FindSelectedNavGrid();
+            }
+
             if (nodeCoordinate.Equals(SelectedNode))
             {
                 return SELECTED_NODE_COLOR;

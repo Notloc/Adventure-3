@@ -15,14 +15,14 @@
         //This is needed as drawing too many Handles at once slows down the editor
         public static SubGrid CreateSubGrids(NavGrid navGrid, int nodeRenderLimit)
         {
-            SubGrid primarySubGrid = new SubGrid(navGrid, null, new Vector2i(), navGrid.Width, navGrid.Height);
+            SubGrid primarySubGrid = new SubGrid(navGrid, null, new Vector2Int(), navGrid.Width, navGrid.Height);
 
             GenerateSubGrids(primarySubGrid, navGrid, nodeRenderLimit);
 
             return primarySubGrid;
         }
 
-        public static SubGrid CreateSubGridAtPoint(NavGrid navgrid, SubGrid currentSubgrid, Vector2i point, int nodeRenderLimit)
+        public static SubGrid CreateSubGridAtPoint(NavGrid navgrid, SubGrid currentSubgrid, Vector2Int point, int nodeRenderLimit)
         {
             
             int width = Mathf.FloorToInt(Mathf.Sqrt(nodeRenderLimit));
@@ -168,8 +168,8 @@
             float widthDivisions = divisions.x;
             float heightDivisions = divisions.y;
 
-            Vector2i originCoordinate = currentSubGrid.GetOriginCoordinate();
-            Vector2i currentCoordinate = originCoordinate;
+            Vector2Int originCoordinate = currentSubGrid.GetOriginCoordinate();
+            Vector2Int currentCoordinate = originCoordinate;
 
             int xSize = Mathf.CeilToInt(width / widthDivisions);
             int ySize = Mathf.CeilToInt(height / heightDivisions);

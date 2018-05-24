@@ -10,7 +10,7 @@
     {
         NavGrid navGrid;
 
-        Vector2i originCoordinate;
+        Vector2Int originCoordinate;
 
         int width;
         public int Width
@@ -32,7 +32,7 @@
         SubGrid parent;
         List<SubGrid> subGrids;
 
-        public SubGrid(NavGrid navGrid, SubGrid parent, Vector2i originCoordinate, int width, int height)
+        public SubGrid(NavGrid navGrid, SubGrid parent, Vector2Int originCoordinate, int width, int height)
         {
             this.navGrid = navGrid;
             this.parent = parent;
@@ -65,7 +65,7 @@
             return subGrids;
         }
 
-        public Vector2i GetOriginCoordinate()
+        public Vector2Int GetOriginCoordinate()
         {
             return originCoordinate;
         }

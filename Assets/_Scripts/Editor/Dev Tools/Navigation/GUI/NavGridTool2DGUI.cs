@@ -5,10 +5,10 @@
     using UnityEngine;
     using UnityEditor;
 
+    using Adventure.Engine.Navigation;
+
     public class NavGridTool2DGUI
     {
-        readonly static Vector2i NO_NODE = new Vector2i(-1, -1);
-
         int selectedTab = 0;
 
         public void Render2DGUI(NavGridTool tool)
@@ -31,12 +31,14 @@
                     case 0:
                         DrawToolsMenu(tool);
                         GUILayout.Space(15);
-                        DrawNodeMenu(tool);
+                        dNodeControls(tool);
+                        DrawModeControls(tool);
                         break;
 
                     //Settings
                     case 1:
                         DrawSettingsMenu(tool);
+                        DrawModeControls(tool);
                         break;
                 }
             }
@@ -63,8 +65,6 @@
                                         2);
         }
 
-
-        //NODE TOOLS
         private void DrawToolsMenu(NavGridTool tool)
         {
             int selectedTool = tool.SelectedTool;
@@ -95,55 +95,94 @@
 
         }
 
-        private void DrawNodeMenu(NavGridTool tool)
+        private void dNodeControls(NavGridTool tool)
         {
-            Vector2i selectedNode = tool.SelectedNode;
+            Vector2Int selectedNode = tool.SelectedNode;
 
             GUILayout.BeginVertical("box");
             {
                 GUILayout.Label("Selected Node", EditorStyles.boldLabel);
 
-                if (selectedNode.Equals(NO_NODE))
+                if (selectedNode.Equals(NavGrid.NO_NODE))
                 {
                     GUILayout.Label("No Node Selected");
                 }
                 else
                 {
-                    DrawNodeControls(tool);
+                    GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
+
+                    if (GUILayout.Button("Parent SubGrid"))
+                    {
+                        tool.SelectParentSubGrid();
+                    }
+
+                    if (GUILayout.Button("Open Grid Here"))
+                    {
+                        tool.CreateSubGridAtSelection();
+                    }
                 }
 
             }
             GUILayout.EndVertical();
         }
 
-        private void DrawNodeControls(NavGridTool tool)
+        private void DrawModeControls(NavGridTool tool)
         {
-            Vector2i selectedNode = tool.SelectedNode;
-
-            GUILayout.Label("Node: (" + selectedNode.x + ", " + selectedNode.y + ")");
-
-            if (GUILayout.Button("Parent SubGrid"))
+            GUILayout.BeginHorizontal("box");
             {
-                tool.SelectParentSubGrid();
-            }
+                // Render Toggle
+                if(NavGridTool3DGUI.currentMode == NavGridTool3DGUI.Mode.RENDER || NavGridTool3DGUI.currentMode == NavGridTool3DGUI.Mode.EDIT)
+                {
+                    if (GUILayout.Button("Disable Render"))
+                    {
+                        tool.GUI3D.SetMode(NavGridTool3DGUI.Mode.DISABLED);
+                        tool.UnselectNode();
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button("Enable Render"))
+                        tool.GUI3D.SetMode(NavGridTool3DGUI.Mode.RENDER);
+                }
+                
+                // View | Edit Mode
+                if(NavGridTool3DGUI.currentMode == NavGridTool3DGUI.Mode.DISABLED)
+                {
+                    GUILayout.Button("...");
+                }
+                else
+                {
+                    if(NavGridTool3DGUI.currentMode == NavGridTool3DGUI.Mode.RENDER)
+                    {
+                        if (GUILayout.Button("Edit Mode ->"))
+                        {
+                            tool.GUI3D.SetMode(NavGridTool3DGUI.Mode.EDIT);
+                            tool.RegenerateSubGrids();
+                        }
+                    }
+                    else if(NavGridTool3DGUI.currentMode == NavGridTool3DGUI.Mode.EDIT)
+                    {
+                        if (GUILayout.Button("Render Mode ->"))
+                        {
+                            tool.GUI3D.SetMode(NavGridTool3DGUI.Mode.RENDER);
+                            tool.UnselectNode();
+                        }
+                    }
+                }
 
-            if (GUILayout.Button("Open Grid Here"))
-            {
-                tool.CreateSubGridAtSelection();
+
             }
+            GUILayout.EndHorizontal();
         }
-        //END NODE TOOLS
 
 
-        //SETTINGS
         private void DrawSettingsMenu(NavGridTool tool)
         {
             GUILayout.Label("Settings", EditorStyles.boldLabel);
 
-            DrawNodeLimit(tool);
+            dNodeLimit(tool);
         }
-
-        private void DrawNodeLimit(NavGridTool tool)
+        private void dNodeLimit(NavGridTool tool)
         {
             tool.NODE_RENDER_LIMIT = Mathf.Clamp(EditorGUILayout.IntField("Node Render Limit", tool.NODE_RENDER_LIMIT), 25, 10000);
 
@@ -152,7 +191,6 @@
                 tool.RegenerateSubGrids();
             }
         }
-        //END SETTINGS
 
     }
 }

@@ -7,30 +7,44 @@
 
         /* 8 Bits
          *  
-         *      7 6 5 4 3 2 1 0
+         *      Byte as bits -> [7 6 5 4 3 2 1 0]
          *      
-         *      0 - 3   represent if walls are present
-         *      4       represents if the node is pathable
-         *      5 - 7   currently unused
+         *      0 - 3   represent walls
+         *      4       represent pathability
+         *      5 - 7   unused
          */
 
 
-        //Bit 0
+        //Bit 0 - North Wall
+        public bool HasWallNorth()
+        {
+            return (data & 1) == 1;
+        }
 
-        //Bit 1
+        //Bit 1 - East Wall
+        public bool HasWallEast()
+        {
+            return ((data >> 1) & 1) == 1;
+        }
 
         //Bit 2
+        public bool HasWallSouth()
+        {
+            return ((data >> 2) & 1) == 1;
+        }
 
-
+        //Bit 3
+        public bool HasWallWest()
+        {
+            return ((data >> 3) & 1) == 1;
+        }
 
         //Bit 4
         public bool IsPathable()
         {
-            //Bit-shift bit 4 into position 0
-            //Use '& 1' to get rid of the rest of the data
-            //Return result
             return ((data >> 4) & 1) == 1;
         }
+
 
         public void SetPathable(bool state)
         {

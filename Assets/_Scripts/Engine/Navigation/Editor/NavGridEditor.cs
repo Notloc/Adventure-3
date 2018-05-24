@@ -10,7 +10,7 @@
     {
         private NavGrid navGrid;
 
-        SerializedProperty nodesProp, widthProp, heightProp, offsetProp;
+        SerializedProperty widthProp, heightProp, offsetProp;
 
         //Resize Variables
         int newWidth;
@@ -23,7 +23,6 @@
             navGrid = target as NavGrid;
 
             //Get properties
-            nodesProp = serializedObject.FindProperty("nodes");
             widthProp = serializedObject.FindProperty("width");
             heightProp = serializedObject.FindProperty("height");
             offsetProp = serializedObject.FindProperty("positionOffset");

@@ -6,13 +6,44 @@
     using UnityEngine;
     using UnityEditor;
 
-    public static class NavGridTool3DGUI
+    public class NavGridTool3DGUI
     {
-        readonly static Color SUBGRID_COLOR = new Color(0f, 0.2f, 1.0f, 0.8f);
+        public enum Mode { DISABLED, RENDER, EDIT };
 
-        //Draws the given SubGrid and its contents
-        public static void DrawSubGrid(NavGridTool tool)
+        readonly static Color SUBGRID_COLOR = new Color(0f, 0.2f, 1.0f, 0.8f);
+        public static Mode currentMode = Mode.DISABLED;
+
+        [DrawGizmo(GizmoType.Selected)]
+        static void OnDrawGizmosSelected(NavGrid grid, GizmoType type)
         {
+            if (currentMode != NavGridTool3DGUI.Mode.RENDER)
+                return;
+
+            NavGridTool tool = EditorWindow.GetWindow(typeof(NavGridTool), false, "", false) as NavGridTool;
+
+            //Draw each node
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    Gizmos.color = tool.ChooseNodeColor(new Vector2Int(x, y));
+                    Gizmos.DrawCube(grid.GetOriginWorldPosition() + new Vector3(x, 0, y), Vector3.one * 0.45f);
+                }
+            }
+        }
+
+        public void SetMode(Mode newMode)
+        {
+            currentMode = newMode;
+        }
+
+        public void DrawSubGrid(NavGridTool tool)
+        {
+            if(currentMode != Mode.EDIT)
+                return;
+
+
+
             SubGrid selectedSubGrid = tool.SelectedSubGrid;
 
             List<SubGrid> subGrids = selectedSubGrid.GetChildSubGrids();
@@ -41,7 +72,7 @@
         private static bool DrawSubGridHandle(SubGrid subGrid, SubGrid activeSubGrid, Color subGridColor)
         {
 
-            Vector2i subGridOriginPosition = subGrid.GetOriginCoordinate();
+            Vector2Int subGridOriginPosition = subGrid.GetOriginCoordinate();
             Vector3 subGridWorldPosition = subGrid.GetNavGrid().GetOriginWorldPosition() + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
 
             Vector3[] vertexs =
@@ -74,13 +105,13 @@
             return false;
         }
 
-        private static void DrawNodeHandles(NavGridTool tool, SubGrid subGrid)
+        private void DrawNodeHandles(NavGridTool tool, SubGrid subGrid)
         {
             float NODE_SIZE = 0.45f;
 
             NavGrid navGrid = subGrid.GetNavGrid();
 
-            Vector2i subGridOriginPosition = subGrid.GetOriginCoordinate();
+            Vector2Int subGridOriginPosition = subGrid.GetOriginCoordinate();
             Vector3 subGridWorldPosition = navGrid.GetOriginWorldPosition() + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
 
             int width = subGrid.Width;
@@ -91,23 +122,28 @@
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Vector2i nodeCoordinates =
-                                        new Vector2i(
+                    Vector2Int nodeCoordinates =
+                                        new Vector2Int(
                                             subGridOriginPosition.x + x,
                                             subGridOriginPosition.y + y
                                         );
 
                     Handles.color = tool.ChooseNodeColor(nodeCoordinates);
 
-                    //Draw nodes as buttons and watch for input
-                    if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), NODE_SIZE, NODE_SIZE, Handles.CubeHandleCap))
-                        HandleNodeClick(subGrid, nodeCoordinates);
+                    if(currentMode == Mode.EDIT)
+                    {
+                        //Draw nodes as buttons and watch for input
+                        if (Handles.Button(subGridWorldPosition + new Vector3(x, 0, y), Quaternion.LookRotation(Vector3.up), NODE_SIZE, NODE_SIZE, Handles.CubeHandleCap))
+                            HandleNodeClick(subGrid, nodeCoordinates);
+                    }
+
+                    
                 }
             }
 
         }
 
-        private static void HandleNodeClick(SubGrid subGrid, Vector2i nodeCoordinates)
+        private static void HandleNodeClick(SubGrid subGrid, Vector2Int nodeCoordinates)
         {
             //Get the active instance of NavGridTool and send it the NodeClick
             NavGridTool navGridTool = (EditorWindow.GetWindow(typeof(NavGridTool)) as NavGridTool);
