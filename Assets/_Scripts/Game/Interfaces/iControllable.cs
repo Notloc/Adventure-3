@@ -11,6 +11,8 @@
             get;
         }
 
+        void InteractWith(Entity target, Interaction interaction);
+
         void MoveTo(Vector2Int coordinate, NavGrid navgrid);
         void ReceivePath(Path path);
     }

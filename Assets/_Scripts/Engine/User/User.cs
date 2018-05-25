@@ -20,7 +20,10 @@
 
         private void Update()
         {
-            mouseHandler.ClickOnNavGrid(character);
+            if (Input.GetButtonDown("Click"))
+            {
+                mouseHandler.HandleClick(character);
+            }
         }
 
     }
