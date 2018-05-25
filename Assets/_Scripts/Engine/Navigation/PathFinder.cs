@@ -96,10 +96,11 @@
                             {
                                 openNodes.Add(newPathNode);
                             }
-                            //If it is, modify it if the new version has a lower fcost
+                            //If it is, modify it if the new version has a lower gcost
                             else
                             {
-                                if (newPathNode.fCost < openNodes[openNodes.IndexOf(newPathNode)].fCost)
+                                int index = openNodes.IndexOf(newPathNode);
+                                if (newPathNode.gCost < openNodes[index].gCost)
                                 {
                                     openNodes.Remove(newPathNode);
                                     openNodes.Add(newPathNode);
@@ -115,13 +116,10 @@
             if (!foundPath)
                 return;
             
+            //Construct and send the path
             Path path = ConstructPath(selectedNode);
-            
             if (this.activeThreadID == activeThreadID)
-            {
                 CALLBACK(path);
-                UnityEngine.Debug.Log("YOOT");
-            }
         }
 
         private Path ConstructPath(PathingNode node)

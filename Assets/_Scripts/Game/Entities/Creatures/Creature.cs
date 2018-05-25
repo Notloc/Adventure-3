@@ -79,18 +79,14 @@
             if(navgrid != locationData.navgrid)
                 return;
 
-            StopAllCoroutines();
-
             //Begin Pathfinding
             pathfinder.BeginPathFinding(navgrid, targetPoint, locationData.coordinates, ReceivePath);
         }
 
         public void ReceivePath(Path newPath)
         {
-
             this.path = newPath;
             pathReady = true;
-            Debug.Log("YOOT");
         }
 
     }

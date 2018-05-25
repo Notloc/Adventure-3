@@ -1,26 +1,21 @@
 ﻿namespace Adventure.Engine.User
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class CameraController : MonoBehaviour
     {
 
-        public Vector3 offset;
-        public float maxPitch;
-        public AnimationCurve pitchHeightCurve;
+        [SerializeField] Vector3 offset;
+        [SerializeField] float maxPitch;
+        [SerializeField] AnimationCurve pitchHeightCurve;
+        [SerializeField] AnimationCurve pitchForwardCurve;
 
-        Transform cameraTransform;
+        [SerializeField] Transform cameraRig;
+        [SerializeField] Transform rotationArm;
+        [SerializeField] Transform cameraTransform;
+        [SerializeField] Transform followTarget;
         float pitch = 0.0f;
 
-        // Use this for initialization
-        void Start()
-        {
-            cameraTransform = Camera.main.transform;
-        }
-
-        // Update is called once per frame
         void Update()
         {
             Rotate();
@@ -29,28 +24,22 @@
 
         void Follow()
         {
-            Vector3 rotatedOffset = (this.transform.forward * offset.z) + (this.transform.right * offset.x) + (this.transform.up * offset.y) + (this.transform.up * PitchHeight(pitch));
+            Vector3 rotatedOffset = (this.transform.forward * offset.z * pitchForwardCurve.Evaluate(pitch / maxPitch))
+                                        + (this.transform.right * offset.x)
+                                            + (this.transform.up * offset.y * pitchHeightCurve.Evaluate(pitch / maxPitch));
 
-            cameraTransform.position = this.transform.position + rotatedOffset;
+            cameraRig.position = followTarget.position;
+            cameraTransform.localPosition = rotatedOffset;
 
         }
 
         void Rotate()
         {
-            //Rotate player
-            this.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
-
-            //Pitch camera
+            if (!Input.GetButton("Rotate Camera"))
+                return;
             pitch = Mathf.Clamp(pitch - Input.GetAxis("Mouse Y"), 0f, maxPitch);
-
-            //Set camera rotation
-            cameraTransform.rotation = Quaternion.Euler(pitch, this.transform.rotation.eulerAngles.y, 0f);
+            rotationArm.rotation = Quaternion.Euler(pitch, rotationArm.rotation.eulerAngles.y + Input.GetAxis("Mouse X"), 0f);
+           
         }
-
-        float PitchHeight(float currentPitch)
-        {
-            return pitchHeightCurve.Evaluate(currentPitch / maxPitch);
-        }
-
     }
 }
