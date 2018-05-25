@@ -7,6 +7,13 @@
     public class Entity : MonoBehaviour
     {
         [SerializeField] protected LocationData locationData;
+        public LocationData LocationData
+        {
+            get
+            {
+                return locationData;
+            }
+        }
 
         private void Reset()
         {

@@ -5,8 +5,9 @@
 
     using System.Collections;
     using System.Threading;
+    using System;
 
-    public class Creature : Entity, iDamagable
+    public class Creature : Entity, iDamagable, iControllable
     {
         public int Health
         {
@@ -73,14 +74,14 @@
             stats.health -= amount;
         }
 
-        public void MoveTo(NavGrid navgrid, Vector2Int targetPoint)
+        public void MoveTo(Vector2Int targetPoint, NavGrid navgrid)
         {
             //Quit if a different NavGrid was clicked
             if(navgrid != locationData.navgrid)
                 return;
 
             //Begin Pathfinding
-            pathfinder.BeginPathFinding(navgrid, targetPoint, locationData.coordinates, ReceivePath);
+            pathfinder.BeginPathFinding(locationData, targetPoint, ReceivePath);
         }
 
         public void ReceivePath(Path newPath)

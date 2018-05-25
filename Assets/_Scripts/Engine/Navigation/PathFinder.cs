@@ -14,29 +14,33 @@
         Thread pathfindingThread;
         uint activeThreadID = 0;
 
-        //Starts a thread that performs pathfinding
-        public void BeginPathFinding(NavGrid navgrid, Vector2Int targetNode, Vector2Int currentNode, Action<Path> CALLBACK)
+        public void BeginPathFinding(LocationData locationData, Vector2Int targetNode, Action<Path> CALLBACK)
         {
+            //Update thread ID
             activeThreadID++;
             if(activeThreadID == uint.MaxValue)
                 activeThreadID = 0;
 
-            pathfindingThread = new Thread(() => PathFindingThread(activeThreadID, navgrid, targetNode, currentNode, CALLBACK));
+            //Create and start the pathfinding thread
+            pathfindingThread = new Thread(() => PathFindingThread(activeThreadID, locationData, targetNode, CALLBACK));
             pathfindingThread.Start();
         }
 
-        //The method used by the pathfinding thread, calls back with the finished path when ready if no other threads start first
-        private void PathFindingThread(uint activeThreadID, NavGrid navgrid, Vector2Int targetNode, Vector2Int currentNode, Action<Path> CALLBACK)
+        //The method used by the pathfinding thread, calls back with the finished path when ready if no other threads are started first
+        private void PathFindingThread(uint activeThreadID, LocationData locationData,  Vector2Int targetNode, Action<Path> CALLBACK)
         {
-            List<PathingNode> openNodes = new List<PathingNode>();
-            HashSet<PathingNode> closedNodes = new HashSet<PathingNode>();
+            NavGrid navgrid = locationData.navgrid;
 
             bool foundPath = false;
 
-            //Add first node manually
-            openNodes.Add(new PathingNode(currentNode, null, 0, CalculateHCost(currentNode, targetNode)));
+            // A* PATHFINDING IMPLEMENTATION
 
+            List<PathingNode> openNodes = new List<PathingNode>();
+            HashSet<PathingNode> closedNodes = new HashSet<PathingNode>();
             PathingNode selectedNode = null;
+
+            openNodes.Add(new PathingNode(locationData.coordinates, null, 0, CalculateHCost(locationData.coordinates, targetNode)));
+
             while(openNodes.Count > 0)
             {
                 selectedNode = SelectLowestCostNode(openNodes);

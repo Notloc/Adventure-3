@@ -5,13 +5,13 @@
     using UnityEngine;
 
     using Adventure.Engine.Navigation;
-    using Adventure.Game.Entities;
+    using Adventure.Game;
 
     public class MouseHandler : MonoBehaviour
     {
         [SerializeField] LayerMask navGridLayerMask;
 
-        public void ClickOnNavGrid(Creature creature)
+        public void ClickOnNavGrid(iControllable character)
         {
             if(Input.GetButtonDown("Click"))
             {
@@ -27,7 +27,7 @@
                         
                         if(nodePosition != NavGrid.NO_NODE)
                         {
-                            creature.MoveTo(navgrid, nodePosition);
+                            character.MoveTo(nodePosition, navgrid);
                         }
                     }
                 }
