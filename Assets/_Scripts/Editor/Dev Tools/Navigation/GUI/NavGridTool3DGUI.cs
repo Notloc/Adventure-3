@@ -27,7 +27,7 @@
                 for (int x = 0; x < grid.Width; x++)
                 {
                     Gizmos.color = tool.ChooseNodeColor(new Vector2Int(x, y));
-                    Gizmos.DrawCube(grid.GetOriginWorldPosition() + new Vector3(x, 0, y), Vector3.one * 0.45f);
+                    Gizmos.DrawCube(grid.WorldPositionOfOrigin + new Vector3(x, 0, y), Vector3.one * 0.45f);
                 }
             }
         }
@@ -73,7 +73,7 @@
         {
 
             Vector2Int subGridOriginPosition = subGrid.GetOriginCoordinate();
-            Vector3 subGridWorldPosition = subGrid.GetNavGrid().GetOriginWorldPosition() + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
+            Vector3 subGridWorldPosition = subGrid.GetNavGrid().WorldPositionOfOrigin + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
 
             Vector3[] vertexs =
             {
@@ -112,7 +112,7 @@
             NavGrid navGrid = subGrid.GetNavGrid();
 
             Vector2Int subGridOriginPosition = subGrid.GetOriginCoordinate();
-            Vector3 subGridWorldPosition = navGrid.GetOriginWorldPosition() + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
+            Vector3 subGridWorldPosition = navGrid.WorldPositionOfOrigin + new Vector3(subGridOriginPosition.x, 0, subGridOriginPosition.y);
 
             int width = subGrid.Width;
             int height = subGrid.Height;

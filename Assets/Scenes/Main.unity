@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 0, y: 0, z: -13}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &167115691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +340,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 37}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -570,7 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -27, y: 0, z: 25}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &267808034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -586,6 +587,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 23, y: 75}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -805,6 +807,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 12}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -849,7 +852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 0, y: 0, z: -38}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!1 &310874752
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,7 +1065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -10.939999, y: 0, z: -1}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &377650715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,6 +1081,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 39, y: 49}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1129,6 +1133,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 23, y: 50}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1173,7 +1178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -27, y: 0, z: 0}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!1 &602031342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,7 +1307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 24, y: 0, z: 7}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &603798654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1318,6 +1323,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 57}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1409,7 +1415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 24, y: 0, z: -38}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &647109219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1425,6 +1431,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 12}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1487,7 +1494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -3, y: 0, z: 25}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &670459312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1503,6 +1510,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 47, y: 75}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1817,7 +1825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -34.94, y: 0, z: -1}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &844537430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1833,6 +1841,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 15, y: 49}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -1895,7 +1904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -10.939999, y: 0, z: -26}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &893603981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1911,6 +1920,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 39, y: 24}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -2139,7 +2149,7 @@ Transform:
   - {fileID: 1721197108}
   - {fileID: 670459310}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063146770
 GameObject:
@@ -2390,7 +2400,7 @@ Transform:
   m_Children:
   - {fileID: 629704627}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1081808598
 GameObject:
@@ -2508,7 +2518,7 @@ Transform:
   - {fileID: 1413276525}
   - {fileID: 1667553775}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1207659722
 GameObject:
@@ -2540,7 +2550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   navGridLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2567,7 +2577,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1214287878
 GameObject:
@@ -2682,7 +2692,7 @@ Transform:
   m_Children:
   - {fileID: 305730994}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1234810751
 MonoBehaviour:
@@ -2699,9 +2709,10 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 50}
+  state: 0
   stats:
     health: 0
-    movementSpeed: 3
+    movementSpeed: 4
 --- !u!54 &1234810752
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12982,7 +12993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 0, y: 0, z: 32}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &1484018790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12998,6 +13009,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 82}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -13016,6 +13028,53 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!1001 &1489048486
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724783693288504, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
+        type: 2}
+      propertyPath: locationData.navgrid
+      value: 
+      objectReference: {fileID: 1413276527}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1556060888
 GameObject:
   m_ObjectHideFlags: 0
@@ -13412,7 +13471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 24, y: 0, z: 32}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &1709475335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13428,6 +13487,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 82}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -13479,6 +13539,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 57}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -13523,7 +13584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 0, y: 0, z: 7}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!1 &1721197107
 GameObject:
   m_ObjectHideFlags: 0
@@ -13568,7 +13629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: 24, y: 0, z: -13}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &1721197110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13584,6 +13645,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 37}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -13602,53 +13664,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!1001 &1743067777
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114724783693288504, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
-        type: 2}
-      propertyPath: locationData.navgrid
-      value: 
-      objectReference: {fileID: 1413276527}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1888915782
 GameObject:
   m_ObjectHideFlags: 0
@@ -13682,6 +13697,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 15, y: 24}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5
@@ -13726,7 +13742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -34.94, y: 0, z: -26}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!1 &1921660886
 GameObject:
   m_ObjectHideFlags: 0
@@ -13855,7 +13871,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homeLocation: {x: -3, y: 0, z: 0}
-  wanderRadius: 7
+  wanderRadius: 14
 --- !u!114 &1948818389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13871,6 +13887,7 @@ MonoBehaviour:
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 47, y: 50}
+  state: 0
   stats:
     health: 0
     movementSpeed: 5

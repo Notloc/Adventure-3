@@ -8,6 +8,8 @@
     public class Entity : MonoBehaviour
     {
         [SerializeField] protected List<Interaction> interactions;
+        [SerializeField] protected LocationData locationData;
+
         public List<Interaction> Interactions
         {
             get
@@ -24,8 +26,6 @@
                 return interactions[0];
             }
         }
-
-        [SerializeField] protected LocationData locationData;
         public LocationData LocationData
         {
             get
@@ -40,18 +40,12 @@
         }
         private void AutoAcquireLocationData()
         {
-            locationData.navgrid = NavGrid.ClosestNavGrid(this.transform.position);
-
+            locationData.navgrid = NavGrid.GetClosestNavGrid(this.transform.position);
             if(locationData.navgrid == null)
-            {
                 return;
-            }
 
             locationData.coordinates = locationData.navgrid.WorldPointToNode(this.transform.position);
         }
-
-        
-
     }
 
     [System.Serializable]

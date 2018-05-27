@@ -32,8 +32,8 @@
                 if (entity == null)
                     return false;
 
-                character.InteractWith(entity.DefaultInteraction);
-
+                character.Interact(entity.DefaultInteraction);
+                return true;
             }
             return false;
         }
@@ -48,11 +48,11 @@
                 if (hit.collider.tag == "NavGrid")
                 {
                     NavGrid navgrid = hit.collider.GetComponent<NavGrid>();
-                    Vector2Int nodePosition = navgrid.WorldPointToNode(hit.point);
+                    Vector2Int clickedPosition = navgrid.WorldPointToNode(hit.point);
 
-                    if (nodePosition != NavGrid.NO_NODE)
+                    if (clickedPosition != NavGrid.NO_NODE)
                     {
-                        character.MoveTo(nodePosition, navgrid);
+                        character.Move(clickedPosition);
                         return true;
                     }
                 }

@@ -8,28 +8,28 @@
 
     public class NavGrid : MonoBehaviour
     {
-        public enum Direction { NORTH, EAST, SOUTH, WEST };
+        
         public readonly static Vector2Int NO_NODE = new Vector2Int(-1, -1);
 
         [SerializeField] Node[] nodes;
+        [SerializeField] int width;
+        [SerializeField] int height;
+        [SerializeField] Vector3 positionOffset;
+
         public Node[] Nodes
         {
             get
             {
                 return nodes;
             }
-        }
-
-        [SerializeField] int width;
+        } 
         public int Width
         {
             get
             {
                 return width;
             }
-        }
-
-        [SerializeField] int height;
+        }  
         public int Height
         {
             get
@@ -37,11 +37,38 @@
                 return height;
             }
         }
+        public Vector3 WorldPositionOfOrigin
+        {
+            get
+            {
+                return this.transform.position + positionOffset;
+            }
+        }
 
-        [SerializeField] Vector3 positionOffset;
+        public Node GetNode(Vector2Int nodeCoordinates)
+        {
+            if (!ValidNode(nodeCoordinates))
+                return new Node();
 
+            return Nodes[(nodeCoordinates.y * width) + nodeCoordinates.x];
+        }
 
+        private bool ValidNode(Vector2Int nodeCoordinates)
+        {
+            if (nodeCoordinates.x < 0 || nodeCoordinates.x >= width)
+            {
+                return false;
+            }
 
+            if (nodeCoordinates.y < 0 || nodeCoordinates.y >= height)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public enum Direction { NORTH, EAST, SOUTH, WEST };
         public bool HasWall(Direction direction, Vector3 position)
         {
             return HasWall(direction, WorldPointToNode(position));
@@ -49,33 +76,97 @@
         public bool HasWall(Direction direction, Vector2Int nodeCoordinate)
         {
             if(direction == Direction.NORTH)
-                return Node(nodeCoordinate).HasWallNorth();
+                return GetNode(nodeCoordinate).HasWallNorth();
 
             else if (direction == Direction.EAST)
-                return Node(nodeCoordinate).HasWallEast();
+                return GetNode(nodeCoordinate).HasWallEast();
 
             else if (direction == Direction.SOUTH)
-                return Node(nodeCoordinate).HasWallSouth();
+                return GetNode(nodeCoordinate).HasWallSouth();
 
             else if (direction == Direction.WEST)
-                return Node(nodeCoordinate).HasWallWest();
+                return GetNode(nodeCoordinate).HasWallWest();
 
             return false;
         }
 
-
-
-
-        public Node Node(Vector2Int coordinate)
+        public bool IsPathable(Vector2Int nodeCoordinates)
         {
-            if (!ValidNode(coordinate))
-                return new Node();
+            if (!ValidNode(nodeCoordinates))
+                return false;
 
-            return Nodes[(coordinate.y * width) + coordinate.x];
+            int nodeIndex = (nodeCoordinates.y * width) + nodeCoordinates.x;
+            return nodes[nodeIndex].IsPathable();
+        }
+        public void TogglePathablity(Vector2Int startingNode, Vector2Int endingNode)
+        {
+            if (!ValidNode(startingNode) || !ValidNode(endingNode))
+                return;
+
+            int startingNodeIndex = (startingNode.y * width) + startingNode.x;
+            bool previousState = nodes[startingNodeIndex].IsPathable();
+
+            //Toggle Single Node
+            if (startingNode.Equals(endingNode))
+            {
+                nodes[startingNodeIndex].SetPathable(!previousState);
+            }
+
+            //Toggle Square of Nodes
+            else
+            {
+                Vector2Int bottomLeft = new Vector2Int(Mathf.Min(startingNode.x, endingNode.x), Mathf.Min(startingNode.y, endingNode.y));
+                Vector2Int topRight = new Vector2Int(Mathf.Max(startingNode.x, endingNode.x), Mathf.Max(startingNode.y, endingNode.y));
+
+                for (int y = bottomLeft.y; y <= topRight.y; y++)
+                {
+                    for (int x = bottomLeft.x; x <= topRight.x; x++)
+                    {
+                        int nodeIndex = (y * width) + x;
+                        nodes[nodeIndex].SetPathable(!previousState);
+                    }
+                }
+            }
+        }
+
+        public Vector2Int WorldPointToNode(Vector3 worldPoint)
+        {
+            int x = Mathf.RoundToInt(worldPoint.x - positionOffset.x);
+            int y = Mathf.RoundToInt(worldPoint.z - positionOffset.z);
+
+            if(x >= 0 && x < width    &&    y >= 0 && y < height)
+            {
+                return new Vector2Int(x,y);
+            }
+            return new Vector2Int(-1, -1);
+        }
+        public Vector3 NodeToWorldPoint(Vector2Int coordinate)
+        {
+            return positionOffset + new Vector3(coordinate.x, 0, coordinate.y);
         }
 
 
-        //Creates the NavGrid's nodes
+        public static NavGrid GetClosestNavGrid(Vector3 position)
+        {
+            NavGrid[] navgrids = GameObject.FindObjectsOfType<NavGrid>();
+
+            float lowestDistance = float.MaxValue;
+            NavGrid closestGrid = null;
+            foreach(NavGrid navgrid in navgrids)
+            {
+                float distance = Vector3.Distance(navgrid.transform.position, position);
+                if (distance < lowestDistance)
+                {
+                    lowestDistance = distance;
+                    closestGrid = navgrid;
+                }
+            }
+            return closestGrid;
+        }
+        public static int Distance(Vector2Int point1, Vector2Int point2)
+        {
+            return Mathf.Abs(point1.x - point2.x) + Mathf.Abs(point1.y - point2.y);
+        }
         public void ResizeGrid(int newWidth, int newHeight, AnchorPoint anchor)
         {
             //Return if the inputs are invalid
@@ -98,14 +189,14 @@
             //Create the new empty grid
             Node[] newNodes = new Node[newWidth * newHeight];
 
-            int xStart=0, xEnd=0;
-            int yStart=0, yEnd=0;
+            int xStart = 0, xEnd = 0;
+            int yStart = 0, yEnd = 0;
 
             int xOffset = 0, yOffset = 0;
             int xMovement = 0, yMovement = 0;
 
             //Calculate where to insert the data into the new grid based on the selected anchor
-            switch(anchor)
+            switch (anchor)
             {
                 case AnchorPoint.NORTH_EAST:
                     //X
@@ -210,105 +301,6 @@
             height = newHeight;
 
             positionOffset += new Vector3(xMovement, 0, yMovement);
-        }
-
-        //Gets the navgrids origin position in 3D space
-        public Vector3 GetOriginWorldPosition()
-        {
-            return this.transform.position + positionOffset;
-        }
-
-        //Checks if a nodes coordinates are valid for the NavGrid
-        private bool ValidNode(Vector2Int nodeCoordinates)
-        {
-            if (nodeCoordinates.x < 0 || nodeCoordinates.x >= width)
-            {
-                return false;
-            }
-
-            if (nodeCoordinates.y < 0 || nodeCoordinates.y >= height)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        //Checks if a node is pathable
-        public bool IsPathable(Vector2Int nodeCoordinates)
-        {
-            if (!ValidNode(nodeCoordinates))
-                return false;
-
-            int nodeIndex = (nodeCoordinates.y * width) + nodeCoordinates.x;
-            return nodes[nodeIndex].IsPathable();
-        }
-
-        //Toggles the pathablity a square of nodes, the corners being defined by Vector2is
-        public void TogglePathablity(Vector2Int startingNode, Vector2Int endingNode)
-        {
-            if (!ValidNode(startingNode) || !ValidNode(endingNode))
-                return;
-
-            int startingNodeIndex = (startingNode.y * width) + startingNode.x;
-            bool previousState = nodes[startingNodeIndex].IsPathable();
-
-            //Toggle Single Node
-            if (startingNode.Equals(endingNode))
-            {
-                nodes[startingNodeIndex].SetPathable(!previousState);
-            }
-
-            //Toggle Square of Nodes
-            else
-            {
-                Vector2Int bottomLeft = new Vector2Int(Mathf.Min(startingNode.x, endingNode.x), Mathf.Min(startingNode.y, endingNode.y));
-                Vector2Int topRight = new Vector2Int(Mathf.Max(startingNode.x, endingNode.x), Mathf.Max(startingNode.y, endingNode.y));
-
-                for (int y = bottomLeft.y; y <= topRight.y; y++)
-                {
-                    for (int x = bottomLeft.x; x <= topRight.x; x++)
-                    {
-                        int nodeIndex = (y * width) + x;
-                        nodes[nodeIndex].SetPathable(!previousState);
-                    }
-                }
-            }
-        }
-
-        public Vector2Int WorldPointToNode(Vector3 worldPoint)
-        {
-            int x = Mathf.RoundToInt(worldPoint.x - positionOffset.x);
-            int y = Mathf.RoundToInt(worldPoint.z - positionOffset.z);
-
-            if(x >= 0 && x < width    &&    y >= 0 && y < height)
-            {
-                return new Vector2Int(x,y);
-            }
-            return new Vector2Int(-1, -1);
-        }
-
-        public Vector3 NodeToWorldPoint(Vector2Int coordinate)
-        {
-            return positionOffset + new Vector3(coordinate.x, 0, coordinate.y);
-        }
-
-        public static NavGrid ClosestNavGrid(Vector3 position)
-        {
-            NavGrid[] navgrids = GameObject.FindObjectsOfType<NavGrid>();
-
-            float lowestDistance = float.MaxValue;
-            NavGrid closestGrid = null;
-            foreach(NavGrid navgrid in navgrids)
-            {
-                float distance = Vector3.Distance(navgrid.transform.position, position);
-                if (distance < lowestDistance)
-                {
-                    lowestDistance = distance;
-                    closestGrid = navgrid;
-                }
-            }
-            return closestGrid;
         }
     }
 }

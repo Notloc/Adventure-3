@@ -39,7 +39,7 @@
 
         void HandlePathReceive(Path path)
         {
-            character.ReceivePath(path);
+            character.Move(path);
         }
 
     }
