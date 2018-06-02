@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -112,6 +112,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &20888227
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724783693288504, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
+        type: 2}
+      propertyPath: locationData.navgrid
+      value: 
+      objectReference: {fileID: 1413276527}
+    - target: {fileID: 114695748304113946, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
+        type: 2}
+      propertyPath: resourceGraphics
+      value: 
+      objectReference: {fileID: 1266795525}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &47032545
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,14 +388,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 37}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &167115692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -583,14 +640,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 23, y: 75}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &267808035
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -803,14 +865,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 12}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &308933284
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1077,14 +1144,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 39, y: 49}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &377650716
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1129,14 +1201,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 23, y: 50}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &387389851
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1319,14 +1396,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 57}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &603798655
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1427,14 +1509,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 12}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &647109220
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1506,14 +1593,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 47, y: 75}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &670459313
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1837,14 +1929,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 15, y: 49}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &844537431
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1916,14 +2013,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 39, y: 24}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &893603982
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2346,6 +2448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc449b5699af684488c5ca9d08280728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensitivity: 2.5
   offset: {x: 0, y: 3, z: -15}
   maxPitch: 60
   pitchHeightCurve:
@@ -2705,14 +2808,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 50}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 4
+    movementSpeed: 3
+  inventory:
+    itemSlots:
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+    - item: {fileID: 0}
+      count: 0
+  skills:
+  - exp: 0
+    skill: {fileID: 11400000, guid: 580b5cd599f39bd4e875649fcb60a41d, type: 2}
 --- !u!54 &1234810752
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2728,6 +2878,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!1 &1266795525 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1538822956488640, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
+    type: 2}
+  m_PrefabInternal: {fileID: 20888227}
 --- !u!1 &1282103834
 GameObject:
   m_ObjectHideFlags: 0
@@ -7190,7 +7345,7 @@ MonoBehaviour:
   - data: 16
   - data: 16
   - data: 16
-  - data: 16
+  - data: 0
   - data: 16
   - data: 16
   - data: 16
@@ -13005,14 +13160,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 82}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1484018791
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13028,53 +13188,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!1001 &1489048486
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4898227792309590, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114724783693288504, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
-        type: 2}
-      propertyPath: locationData.navgrid
-      value: 
-      objectReference: {fileID: 1413276527}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1556060888
 GameObject:
   m_ObjectHideFlags: 0
@@ -13483,14 +13596,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 82}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1709475336
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13535,14 +13653,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 50, y: 57}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1713528922
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13641,14 +13764,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 74, y: 37}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1721197111
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13693,14 +13821,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 15, y: 24}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1888915784
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13883,14 +14016,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphics: {fileID: 0}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
     coordinates: {x: 47, y: 50}
   state: 0
-  stats:
+  interactionState: 0
+  attributes:
     health: 0
-    movementSpeed: 5
+    movementSpeed: 1
+  inventory:
+    itemSlots: []
+  skills: []
 --- !u!54 &1948818390
 Rigidbody:
   m_ObjectHideFlags: 0

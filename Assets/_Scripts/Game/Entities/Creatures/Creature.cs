@@ -2,12 +2,13 @@
 {
     using UnityEngine;
     using Adventure.Engine.Navigation;
+    using Adventure.Game.Items;
+    using Adventure.Game.Skills;
 
     using System.Collections;
-    using System.Threading;
     using System;
 
-    public class Creature : Entity, iDamagable, iControllable
+    public class Creature : Entity, iDamagable, iControllable, iSkilled, iContainer
     {
         private enum State { IDLE, INTERACTING };
         private enum InteractingSubState { INITIAL, PATHING, INTERACTING };
@@ -20,6 +21,10 @@
         {
             movementSpeed = 1
         };
+
+        [SerializeField] ItemContainer inventory;
+
+        [SerializeField] protected SkillData[] skills;
 
         public int Health
         {
@@ -36,6 +41,23 @@
             }
         }
 
+        InteractionData _interactionData = new InteractionData();
+        public InteractionData InteractionData
+        {
+            get
+            {
+                return _interactionData;
+            }
+        }
+
+        public ItemContainer ItemContainer
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         Interaction currentInteraction;
 
         Path userPath;
@@ -44,12 +66,11 @@
         bool userPathReady = false;
         bool autoPathReady = false;
 
-        void Update()
+        void FixedUpdate()
         {
-            ExecuteState(state);  
+            ExecuteCurrentState(state);
         }
-
-        private void ExecuteState(State state)
+        private void ExecuteCurrentState(State state)
         {
             if (state == State.IDLE)
                 TryMovement();
@@ -67,37 +88,72 @@
                 StartCoroutine(FollowPath(userPath, FinishMoving));
             }
         }
-        private void TryAutoMovement()
-        {
-            if (autoPathReady)
-            {
-                StopAllCoroutines();
-                autoPathReady = false;
-                StartCoroutine(FollowPath(autoPath, FinishMoving));
-            }
-        }
 
+        Func<object, InteractionData, bool> interactionMethod;
         private void TryInteraction(Interaction interaction)
         {
             if (interaction == null)
             {
-                this.state = State.IDLE;
+                FinishInteracting();
                 return;
             }
                 
 
-            if(interaction.InRange(this.locationData))
+            if(interactionState == InteractingSubState.INITIAL)
             {
-                interaction.Interact();
+                //Make sure we are in range of the interaction, path to it if we are not
+                
+                if (interaction.InRange(this.locationData.coordinates))
+                {
+                    if (interaction.Interact(this, out interactionMethod))
+                    {
+                        interactionState = InteractingSubState.INTERACTING;
+                        return;
+                    }
+                }
+                else
+                {
+                    interactionState = InteractingSubState.PATHING;
+                    interaction.GeneratePath(this.locationData, AutoMove);
+                    return;
+                }
             }
 
-            interaction.GeneratePath(this.locationData, AutoMove);
+            if(interactionState == InteractingSubState.PATHING)
+            {
+                //Await the autopath and start it when ready
 
-            Debug.Log("Interacted with " + interaction.gameObject.name);
+                if (autoPathReady)
+                {
+                    StopAllCoroutines();
+                    autoPathReady = false;
+                    StartCoroutine(FollowPath(autoPath, FinishAutoMove));
+                    return;
+                }
+            }
 
+            if(interactionState == InteractingSubState.INTERACTING)
+            {
+                //Interact with the interaction until we have a reason to stop
 
+                if(interactionMethod == null)
+                {
+                    FinishInteracting();
+                    return;
+                }
 
-            currentInteraction = null;
+                if(!interactionMethod(this, InteractionData))
+                {
+                    FinishInteracting();
+                    return;
+                }
+            }
+
+        }
+        private void FinishInteracting()
+        {
+            this.currentInteraction = null;
+            this.interactionMethod = null;
             this.state = State.IDLE;
         }
 
@@ -110,18 +166,25 @@
         {
             this.userPath = newPath;
             userPathReady = true;
+            this.state = State.IDLE;
         }
         private void FinishMoving()
         {
             if (this.state != State.INTERACTING)
                 this.state = State.IDLE;
         }
+        
 
         private void AutoMove(Path newPath)
         {
             this.autoPath = newPath;
             autoPathReady = true;
         }
+        private void FinishAutoMove()
+        {
+            interactionState = InteractingSubState.INITIAL;
+        }
+
 
         IEnumerator FollowPath(Path path, Action CallBack)
         {
@@ -148,13 +211,17 @@
                 }
                 timePassed -= timePerMove;
             }
+            CallBack();
         }
 
         public void Interact(Interaction interaction)
         {
             ClearAutoPath();
             this.currentInteraction = interaction;
+            this.InteractionData.Reset();
+            this.interactionState = InteractingSubState.INITIAL;
             this.state = State.INTERACTING;
+            
         }
 
         public void Damage(int amount)
@@ -171,6 +238,19 @@
         {
             this.autoPath = null;
             autoPathReady = false;
+        }
+
+        public int GetSkillLevel(Skill skill)
+        {
+            foreach (SkillData skillData in skills)
+            {
+                if(skillData.skill == skill)
+                {
+                    return skill.GetLevel(skillData.exp);
+                }
+            }
+
+            return 0;
         }
     }
 

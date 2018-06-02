@@ -5,11 +5,15 @@
     public class CameraController : MonoBehaviour
     {
 
+        [SerializeField] float sensitivity = 1.0f; 
         [SerializeField] Vector3 offset;
+
+        [Header("Pitch Settings")]
         [SerializeField] float maxPitch;
         [SerializeField] AnimationCurve pitchHeightCurve;
         [SerializeField] AnimationCurve pitchForwardCurve;
 
+        [Header("Camera Rig Transforms")]
         [SerializeField] Transform cameraRig;
         [SerializeField] Transform rotationArm;
         [SerializeField] Transform cameraTransform;
@@ -37,8 +41,8 @@
         {
             if (!Input.GetButton("Rotate Camera"))
                 return;
-            pitch = Mathf.Clamp(pitch - Input.GetAxis("Mouse Y"), 0f, maxPitch);
-            rotationArm.rotation = Quaternion.Euler(pitch, rotationArm.rotation.eulerAngles.y + Input.GetAxis("Mouse X"), 0f);
+            pitch = Mathf.Clamp(pitch - Input.GetAxis("Mouse Y") * sensitivity, 0f, maxPitch);
+            rotationArm.rotation = Quaternion.Euler(pitch, rotationArm.rotation.eulerAngles.y + Input.GetAxis("Mouse X") * sensitivity, 0f);
            
         }
     }

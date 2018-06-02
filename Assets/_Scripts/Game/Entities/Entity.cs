@@ -1,12 +1,14 @@
 ﻿namespace Adventure.Game.Entities
 {
-    using System.Collections.Generic;
-    using UnityEngine;
     using Adventure.Engine.Navigation;
+
+    using System.Collections.Generic;
+    using UnityEngine;   
 
     [RequireComponent(typeof(Rigidbody))]
     public class Entity : MonoBehaviour
     {
+        [SerializeField] GameObject graphics;
         [SerializeField] protected List<Interaction> interactions;
         [SerializeField] protected LocationData locationData;
 
@@ -34,6 +36,15 @@
             }
         }
 
+        public void Enable3D()
+        {
+            graphics.SetActive(true);
+        }
+        public void Disable3D()
+        {
+            graphics.SetActive(false);
+        }
+
         private void Reset()
         {
             AutoAcquireLocationData();
@@ -46,12 +57,5 @@
 
             locationData.coordinates = locationData.navgrid.WorldPointToNode(this.transform.position);
         }
-    }
-
-    [System.Serializable]
-    public struct LocationData
-    {
-        public NavGrid navgrid;
-        public Vector2Int coordinates;
     }
 }
