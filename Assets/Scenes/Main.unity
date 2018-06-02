@@ -156,11 +156,6 @@ Prefab:
       propertyPath: locationData.navgrid
       value: 
       objectReference: {fileID: 1413276527}
-    - target: {fileID: 114695748304113946, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
-        type: 2}
-      propertyPath: resourceGraphics
-      value: 
-      objectReference: {fileID: 1266795525}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf, type: 2}
   m_IsPrefabParent: 0
@@ -2808,7 +2803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b78d09e97cd6a478698232dce016ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphics: {fileID: 0}
+  graphics: {fileID: 305730993}
   interactions: []
   locationData:
     navgrid: {fileID: 1413276527}
@@ -2861,8 +2856,8 @@ MonoBehaviour:
     - item: {fileID: 0}
       count: 0
   skills:
-  - exp: 0
-    skill: {fileID: 11400000, guid: 580b5cd599f39bd4e875649fcb60a41d, type: 2}
+  - skill: {fileID: 11400000, guid: 580b5cd599f39bd4e875649fcb60a41d, type: 2}
+    exp: 0
 --- !u!54 &1234810752
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2878,11 +2873,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!1 &1266795525 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1538822956488640, guid: 9edb358cb8cdaa44d90cbed08a0dcfcf,
-    type: 2}
-  m_PrefabInternal: {fileID: 20888227}
 --- !u!1 &1282103834
 GameObject:
   m_ObjectHideFlags: 0

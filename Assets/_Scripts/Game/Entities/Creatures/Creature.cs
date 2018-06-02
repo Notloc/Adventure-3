@@ -224,7 +224,7 @@
             
         }
 
-        public void Damage(int amount)
+        public void TakeDamage(int amount)
         {
             attributes.health -= amount;
         }
@@ -244,13 +244,24 @@
         {
             foreach (SkillData skillData in skills)
             {
-                if(skillData.skill == skill)
+                if(skillData.Skill == skill)
                 {
-                    return skill.GetLevel(skillData.exp);
+                    return skill.GetLevel(skillData.Experience);
                 }
             }
 
             return 0;
+        }
+        public void GainExperience(Skill skill, float amount)
+        {
+            for(int i = 0; i < skills.Length; i++)
+            {  
+                if (skills[i].Skill == skill)
+                {
+                    skills[i].GainExperience(amount);
+                    return;
+                }
+            }
         }
     }
 

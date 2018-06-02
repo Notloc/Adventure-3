@@ -7,5 +7,6 @@
     public interface iSkilled
     {
         int GetSkillLevel(Skill skill);
+        void GainExperience(Skill skill, float amount);
     }
 }

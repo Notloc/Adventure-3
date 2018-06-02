@@ -18,6 +18,7 @@
 
         [Header("Resource Variables")]
         [SerializeField] Item item;
+        [SerializeField] float experienceValue;
         [SerializeField] AnimationCurve amountRange;
         [SerializeField] AnimationCurve respawnTimeRange;
 
@@ -97,7 +98,10 @@
                 if (RollForSuccess(skillLevel))
                 {
                     currentAmount--;
+
                     Debug.Log("Item Get!");
+                    userSkilled.GainExperience(requiredSkill, experienceValue);
+
                     interactionData.Reset();
 
                     if(currentAmount > 0)
@@ -108,14 +112,12 @@
                 }
                 else
                 {
-                    Debug.Log("Chop");
                     interactionData.timer -= (1.0f / chanceRate);
                     return true;
                 }
             }
             else
             {
-                Debug.Log("Chop0");
                 return true;
             }
         }

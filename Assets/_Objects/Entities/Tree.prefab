@@ -373,9 +373,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activationRange: 1
   squareRange: 0
+  resourceGraphics: {fileID: 1538822956488640}
   requiredSkill: {fileID: 11400000, guid: 580b5cd599f39bd4e875649fcb60a41d, type: 2}
   requiredSkillLevel: 1
   item: {fileID: 0}
+  experienceValue: 20
   amountRange:
     serializedVersion: 2
     m_Curve:
