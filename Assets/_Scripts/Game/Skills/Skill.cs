@@ -7,6 +7,12 @@
 
     public abstract class Skill : ScriptableObject
     {
-        [SerializeField] Dictionary<Entity, Skill[]> users;
+        [SerializeField] AnimationCurve levelCurve;
+
+        public int GetLevel(float experience)
+        {
+            return Mathf.Clamp(Mathf.FloorToInt(levelCurve.Evaluate(experience)), 1, 99);
+        }
+
     }
 }
