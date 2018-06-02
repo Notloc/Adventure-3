@@ -21,16 +21,33 @@
             if(activeThreadID == uint.MaxValue)
                 activeThreadID = 0;
 
+            HashSet<Vector2Int> targetCoordinates = new HashSet<Vector2Int>();
+            targetCoordinates.Add(targetNode);
+
             //Create and start the pathfinding thread
-            pathfindingThread = new Thread(() => PathFindingThread(activeThreadID, locationData, targetNode, CALLBACK));
+            pathfindingThread = new Thread(() => PathFindingThread(activeThreadID, locationData, targetNode, targetCoordinates, CALLBACK));
+            pathfindingThread.Start();
+        }
+        public void BeginPathFinding(LocationData locationData, Vector2Int targetNode, HashSet<Vector2Int> validCoordinates, Action<Path> CALLBACK)
+        {
+            //Update thread ID
+            activeThreadID++;
+            if (activeThreadID == uint.MaxValue)
+                activeThreadID = 0;
+
+            validCoordinates.Add(targetNode);
+
+            //Create and start the pathfinding thread
+            pathfindingThread = new Thread(() => PathFindingThread(activeThreadID, locationData, targetNode, validCoordinates, CALLBACK));
             pathfindingThread.Start();
         }
 
+
+
         //The method used by the pathfinding thread, calls back with the finished path when ready if no other threads are started first
-        private void PathFindingThread(uint activeThreadID, LocationData locationData,  Vector2Int targetNode, Action<Path> CALLBACK)
+        private void PathFindingThread(uint activeThreadID, LocationData locationData, Vector2Int targetCoordinate, HashSet<Vector2Int> targetCoordinates, Action<Path> CALLBACK)
         {
             NavGrid navgrid = locationData.navgrid;
-
             bool foundPath = false;
 
             // A* PATHFINDING IMPLEMENTATION
@@ -39,96 +56,61 @@
             HashSet<PathingNode> closedNodes = new HashSet<PathingNode>();
             PathingNode selectedNode = null;
 
-            openNodes.Add(new PathingNode(locationData.coordinates, null, 0, CalculateHCost(locationData.coordinates, targetNode)));
+            openNodes.Add(new PathingNode(locationData.coordinates, null, 0, CalculateHCost(locationData.coordinates, targetCoordinate)));
 
             while(openNodes.Count > 0)
             {
+                //Select new node
                 selectedNode = SelectLowestCostNode(openNodes);
                 openNodes.Remove(selectedNode);
                 closedNodes.Add(selectedNode);
 
-                if(selectedNode.coordinate == targetNode)
+                //Check if we're done
+                if(targetCoordinates.Contains(selectedNode.coordinate))
                 {
                     foundPath = true;
                     break;
                 }
-                    
-                //Check each surrounding node
-                for(int i = 0; i < 4; i++)
+
+                List<PathingNode> neighboringNodes = FindPathableNeighboringNodes(selectedNode, targetCoordinate, navgrid);
+
+
+                foreach (PathingNode node in neighboringNodes)
                 {
-                    //Setup direction
-                    NavGrid.Direction direction = NavGrid.Direction.NORTH;
-                    Vector2Int offset = new Vector2Int();
-                    switch(i)
+                    if (closedNodes.Contains(node))
+                        continue;
+
+                    //Add to open list if its not already in it
+                    if (!openNodes.Contains(node))
                     {
-                        case 0:
-                            direction = NavGrid.Direction.NORTH;
-                            offset = new Vector2Int(0, 1);
-                            break;
-
-                        case 1:
-                            direction = NavGrid.Direction.EAST;
-                            offset = new Vector2Int(1, 0);
-                            break;
-
-                        case 2:
-                            direction = NavGrid.Direction.SOUTH;
-                            offset = new Vector2Int(0, -1);
-                            break;
-
-                        case 3:
-                            direction = NavGrid.Direction.WEST;
-                            offset = new Vector2Int(-1, 0);
-                            break;
+                        openNodes.Add(node);
                     }
-
-                    //Is there is no wall
-                    if (!navgrid.HasWall(direction, selectedNode.coordinate))
+                    //If it is, modify it if the new version has a lower gcost
+                    else
                     {
-                        Vector2Int newCoordinate = selectedNode.coordinate + offset;
-                        PathingNode newPathNode = new PathingNode(newCoordinate, selectedNode);
-
-                        //Make sure it isn't in the closed list and Check for pathability
-                        if (!closedNodes.Contains(newPathNode) && navgrid.IsPathable(newCoordinate))
+                        int index = openNodes.IndexOf(node);
+                        if (node.gCost < openNodes[index].gCost)
                         {
-                            //Compute score
-                            newPathNode.gCost = selectedNode.gCost;
-                            newPathNode.hCost = CalculateHCost(newCoordinate, targetNode);
-
-                            //Add to open list if its not already in it
-                            if(!openNodes.Contains(newPathNode))
-                            {
-                                openNodes.Add(newPathNode);
-                            }
-                            //If it is, modify it if the new version has a lower gcost
-                            else
-                            {
-                                int index = openNodes.IndexOf(newPathNode);
-                                if (newPathNode.gCost < openNodes[index].gCost)
-                                {
-                                    openNodes.Remove(newPathNode);
-                                    openNodes.Add(newPathNode);
-                                }
-                            }
-                            
+                            openNodes.Remove(node);
+                            openNodes.Add(node);
                         }
                     }
                 }
-
             }
 
+            //If we haven't found a path, stop here
             if (!foundPath)
                 return;
             
-            //Construct and send the path
+            //Otherwise, construct and send the path
             Path path = ConstructPath(selectedNode);
             if (this.activeThreadID == activeThreadID)
                 CALLBACK(path);
         }
 
+        //Creates the final path using the final pathingnode
         private Path ConstructPath(PathingNode node)
         {
-            //UnityEngine.Debug.Log(node);
             Path path = new Path();
 
             while (node.parentNode != null)
@@ -158,6 +140,62 @@
             }
             return lowestCostNode;
         }
+
+
+        private List<PathingNode> FindPathableNeighboringNodes(PathingNode selectedNode, Vector2Int targetCoordinate, NavGrid navgrid)
+        {
+            List<PathingNode> neighborNodes = new List<PathingNode>();
+
+            //Check each surrounding node
+            for (int i = 0; i < 4; i++)
+            {
+                //Setup direction
+                NavGrid.Direction direction = NavGrid.Direction.NORTH;
+                Vector2Int offset = new Vector2Int();
+                switch (i)
+                {
+                    case 0:
+                        direction = NavGrid.Direction.NORTH;
+                        offset = new Vector2Int(0, 1);
+                        break;
+
+                    case 1:
+                        direction = NavGrid.Direction.EAST;
+                        offset = new Vector2Int(1, 0);
+                        break;
+
+                    case 2:
+                        direction = NavGrid.Direction.SOUTH;
+                        offset = new Vector2Int(0, -1);
+                        break;
+
+                    case 3:
+                        direction = NavGrid.Direction.WEST;
+                        offset = new Vector2Int(-1, 0);
+                        break;
+                }
+
+                //Is there is no wall
+                if (!navgrid.HasWall(direction, selectedNode.coordinate))
+                {
+                    Vector2Int newCoordinate = selectedNode.coordinate + offset;
+
+                    //Check for pathability
+                    if (navgrid.IsPathable(newCoordinate))
+                    {
+                        //Create new pathingnode and compute scores
+                        PathingNode newPathingNode = new PathingNode(newCoordinate, selectedNode);
+                        newPathingNode.gCost = selectedNode.gCost;
+                        newPathingNode.hCost = CalculateHCost(newCoordinate, targetCoordinate);
+
+                        neighborNodes.Add(newPathingNode);
+                    }
+                }
+            }
+
+            return neighborNodes;
+        }
+
 
         private class PathingNode
         {
