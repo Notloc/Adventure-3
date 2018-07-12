@@ -33,7 +33,7 @@
                 return attributes.health;
             }
         }
-        public int MovementSpeed
+        public float MovementSpeed
         {
             get
             {
@@ -54,7 +54,7 @@
         {
             get
             {
-                throw new NotImplementedException();
+                return inventory;
             }
         }
 
@@ -188,28 +188,36 @@
 
         IEnumerator FollowPath(Path path, Action CallBack)
         {
+            Vector3 currentPosition = transform.position;
             float timePassed = 0;
             float timePerMove = (1.0f / MovementSpeed);
 
             while (path.HasDirections())
             {
                 Vector2Int nextNode = path.Next();
-
-                Vector3 currentPosition = transform.position;
                 Vector3 targetPosition = locationData.navgrid.NodeToWorldPoint(nextNode);
+
+                //Debug.Log(currentPosition);
 
                 if (!locationData.navgrid.IsPathable(nextNode))
                     break;
 
-                locationData.coordinates = nextNode;
-
-                while (timePassed < timePerMove)
+                while (true)
                 {
+                    if (timePassed > timePerMove)
+                    {
+                        currentPosition = targetPosition;
+                        this.transform.position = targetPosition;
+                        break;
+                    }
+
+                    this.transform.position = Vector3.Lerp(currentPosition, targetPosition, (timePassed / timePerMove));
                     yield return null;
                     timePassed += Time.deltaTime;
-                    this.transform.position = Vector3.Lerp(currentPosition, targetPosition, (timePassed / timePerMove));
                 }
                 timePassed -= timePerMove;
+
+                locationData.coordinates = nextNode;
             }
             CallBack();
         }
@@ -269,6 +277,6 @@
     public struct Attributes
     {
         public int health;
-        public int movementSpeed;
+        public float movementSpeed;
     }
 }
